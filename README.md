@@ -173,20 +173,25 @@ Para la revisión de cada una de las fases establecimos un sencillo sistema de p
 
 ## Especificaciones de las entidades
 
-*NOTA* 
-A continuación se definen las propiedades o características principales de las entidades, más no se definen las entidades/propiedades requerida para la elaboración de los reportes. La definición de éstas quedan a discreción del programador. 
+Para el desarrollo de la funcionalidad de alta y modificación de información, hay una serie de datos requeridos que deben existir para poder generar un registro de la entidad en cuestión. Si alguno de los dichos campos requeridos no está presente se debe mostrar un error de validación al usuario.
+Por otra parte, los campos no requeridos u opcionales se pueden omitir al momento de dar de alta o modificar una entidad.
+
+*NOTA*
+
+_A continuación se definen las propiedades necesarias para administrar la información de la aplicación, mas no se definen las entidades y/o propiedades necesarias para la generación de reportes. Dichas definiciones quedan a discreción del programador._
+
 
 ### Usuario
 
-| Campo             | Reglas                                                                                                                                                                                          | Requerido |
-| ----------------- | --------------------------------------------------------------                                                                                                                                  | --------- |
-| Nombre completo   | Solo caracteres alfabéticos y espacios, mínimo 5 y máximo 50                                                                                                                                    | Si        |
-| Nombre de usuario | Solo caracteres alfanuméricos, mínimo 5 y máximo 20                                                                                                                                             | Si        |
-| Alias del usuario | Solo se permite caracteres alfanuméricos, mínimo 3 y máximo 10                                                                                                                                  | No        |
+| Campo             | Reglas                                                                                                                                                                                           | Requerido |
+| ----------------- | --------------------------------------------------------------                                                                                                                                   | --------- |
+| Nombre completo   | Solo caracteres alfabéticos y espacios, mínimo 5 y máximo 50                                                                                                                                     | Si        |
+| Nombre de usuario | Solo caracteres alfanuméricos, mínimo 5 y máximo 20                                                                                                                                              | Si        |
+| Alias del usuario | Solo se permite caracteres alfanuméricos, mínimo 3 y máximo 10                                                                                                                                   | No        |
 | Contraseña        | Mínimo 3 y máximo 10 caracteres, se debe solicitar una letra, un número y un carácter especial como mínimo, si no cuenta con estos requisitos entonces será considerada una contraseña inválida. | Si        |
-| Tipo de usuario   | Para este campo puede ser un listado, radio buttons pero no campos de textos, ya que se le debe indicar al usuario los tipos disponibles sin dejar que los edite                                | Si        |
-| Sucursal          | Para este campo puede ser un listado con las sucursales disponibles                                                                                                                             | No        |
-| Foto              | Cargar una imagen de perfil para el usuario                                                                                                                                                     | No        |
+| Tipo de usuario   | Para este campo puede ser un listado, radio buttons pero no campos de textos, ya que se le debe indicar al usuario los tipos disponibles sin dejar que los edite                                 | Si        |
+| Sucursal          | Para este campo puede ser un listado con las sucursales disponibles                                                                                                                              | No        |
+| Foto              | Cargar una imagen de perfil para el usuario                                                                                                                                                      | No        |
 
 ### Cliente
 
@@ -197,6 +202,7 @@ A continuación se definen las propiedades o características principales de las
 | Telefono | Solo caracteres numéricos, de exactamente 10 caracteres                                         | No        |
 | Email    | Validación de formato email, mínimo 5 y máximo 25                                               | Si        |
 | Sucursal | Este campo debe estar prellenado con el mismo comercio del usuario logeado, es de solo lectura. | Si        |
+| BrunchyPuntos actuales | Se le asigna valores automáticamente, es de solo lectura.                         | Si        |
 | Fecha    | Este campo debe estar prellenado con la fecha del sistema, es de solo lectura.                  | Si        |
 
 ### BrunchyPromos
@@ -244,3 +250,7 @@ Los permisos que tiene cada tipo de usuario se asignan de la siguiente forma:
 | --                            | --            | --     |
 | Reportes                      | ✔             |
 
+
+## Mockups de aplicación 
+
+![Diseño de pantallas](/Mockups_BrunchyApp.png)
