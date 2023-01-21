@@ -191,6 +191,7 @@ _A continuación se definen las propiedades necesarias para administrar la infor
 | Tipo de usuario   | Para este campo puede ser un listado, radio buttons pero no campos de textos, ya que se le debe indicar al usuario los tipos disponibles sin dejar que los edite                                 | Si        |
 | Sucursal          | Para este campo puede ser un listado con las sucursales disponibles. Es la sucursal a la que se asigna al empleado                                                                                                                              | No        |
 | Foto              | Cargar una imagen de perfil para el usuario                                                                                                                                                      | No        |
+*El nombre ni el tipo de usuario no se puede editar una vez dado de alta.*
 
 ### Cliente
 
@@ -204,6 +205,9 @@ _A continuación se definen las propiedades necesarias para administrar la infor
 | BrunchyPuntos | Se le asigna valor automáticamente, es de solo lectura.                         | Si        |
 | Fecha    | Este campo debe estar prellenado con la fecha del sistema, es de solo lectura.                  | Si        |
 
+*La sucursal del cliente no se puede editar, ya que este dato refleja donde fue dado de alta.*
+*Los BrunchyPuntos no se pueden editar ni dar de alta ya que se calculan de forma automática.*
+
 ### BrunchyPromos
 
 | Campo                   | Reglas                                                                                                        | Requerido |
@@ -213,6 +217,7 @@ _A continuación se definen las propiedades necesarias para administrar la infor
 | Porcentaje de descuento | Cantidad decimal, mayor a 0 y menor a 100                                                                     | Si        |
 | Estatus                 | Mostrar un listbox, un par de radio buttons o un checkbox para indicar si esta activa o inactiva la promoción | Si        |
 
+*El nombre de las BrunchyPromos no se puede editar.*
 
 ### Sucursales
 
@@ -221,6 +226,7 @@ _A continuación se definen las propiedades necesarias para administrar la infor
 | Nombre                  | Solo caracteres alfabéticos y espacios, mínimo 5 y máximo 50                                                  | Si        |
 | Dirección               | Texto de cualquier longitud                                                                                   | No        |
 
+*El nombre de las sucursales no se puede editar.*
 
 ## Permisos de pantallas para tipos de usuario
 
@@ -248,6 +254,7 @@ Los permisos que tiene cada tipo de usuario se asignan de la siguiente forma:
 | Canje de BrunchyPuntos        | ✔             | ✔      |
 | --                            | --            | --     |
 | Reportes                      | ✔             |
+
 
 
 ## Mockups de aplicación 
