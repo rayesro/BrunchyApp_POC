@@ -78,7 +78,7 @@ Al finalizar esta fase, tendremos todos los servicios que darán soporte a la Br
 Las condiciones de esta fase son:
 - Todos los datos de las entidades serán información de prueba o "dummy data", ya que aún no se cuenta con los procesos para gestionar esa información. 
 - El proceso de canje se podrá simular en la aplicación, de tal forma que se podrá visualizar el proceso una vez terminada la BrunchyApp, pero no habrá registro del canje.
-- La simulación del proceso de inicio se sesión se hará con la "dummy data".
+- La simulación del proceso de inicio se sesión se hará con la "dummy data". Hay que considerar que un usuario (administrador o cajero) puede ingresar a cualquier sucursal, es decir, un empleado se puede mover a trabajar a cualquier sucursal).
 - La información tanto de usuarios, clientes, sucursales, brunchypuntos y brunchypromos podrá ser vista desde las pantallas de listados.
 - Si el tiempo lo permite, la "dummy data" puede provenir de una base de datos.
 
@@ -189,7 +189,7 @@ _A continuación se definen las propiedades necesarias para administrar la infor
 | Alias del usuario | Solo se permite caracteres alfanuméricos, mínimo 3 y máximo 10                                                                                                                                   | No        |
 | Contraseña        | Mínimo 3 y máximo 10 caracteres, se debe solicitar una letra, un número y un carácter especial como mínimo, si no cuenta con estos requisitos entonces será considerada una contraseña inválida. | Si        |
 | Tipo de usuario   | Para este campo puede ser un listado, radio buttons pero no campos de textos, ya que se le debe indicar al usuario los tipos disponibles sin dejar que los edite                                 | Si        |
-| Sucursal          | Para este campo puede ser un listado con las sucursales disponibles                                                                                                                              | No        |
+| Sucursal          | Para este campo puede ser un listado con las sucursales disponibles. Es la sucursal a la que se asigna al empleado                                                                                                                              | No        |
 | Foto              | Cargar una imagen de perfil para el usuario                                                                                                                                                      | No        |
 
 ### Cliente
