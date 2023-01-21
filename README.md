@@ -201,7 +201,7 @@ _A continuación se definen las propiedades necesarias para administrar la infor
 | Telefono | Solo caracteres numéricos, de exactamente 10 caracteres                                         | No        |
 | Email    | Validación de formato email, mínimo 5 y máximo 25                                               | Si        |
 | Sucursal | Este campo debe estar prellenado con el mismo comercio del usuario logeado, es de solo lectura. | Si        |
-| BrunchyPuntos actuales | Se le asigna valores automáticamente, es de solo lectura.                         | Si        |
+| BrunchyPuntos | Se le asigna valor automáticamente, es de solo lectura.                         | Si        |
 | Fecha    | Este campo debe estar prellenado con la fecha del sistema, es de solo lectura.                  | Si        |
 
 ### BrunchyPromos
