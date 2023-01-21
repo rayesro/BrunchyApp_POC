@@ -2,7 +2,7 @@
 
 ## Contexto
 
-Un programa de lealtad o programa de fidelización es una estrategia para aumentar las ventan de un negocio, cuyo propósito es premiar el comportamiento de compra de los clientes, lo que lleva a producir en ellos un sentido de lealtad y fidelidad hacia la marca. 
+Un programa de lealtad o programa de fidelización es una estrategia para aumentar las ventas de un negocio, cuyo propósito es premiar el comportamiento de compra de los clientes, lo que lleva a producir en ellos un sentido de lealtad y fidelidad hacia la marca. 
 
 Dentro de las ventajas que encontramos en implementar un programa de lealtad son:
 - Primeramente, estimular en los clientes la compra o el consumo de un producto o servicio.
