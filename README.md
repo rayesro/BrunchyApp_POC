@@ -5,7 +5,7 @@
 Un programa de lealtad o programa de fidelización es una estrategia para aumentar las ventan de un negocio, cuyo propósito es premiar el comportamiento de compra de los clientes, lo que lleva a producir en ellos un sentido de lealtad y fidelidad hacia la marca. 
 
 Dentro de las ventajas que encontramos en implementar un programa de lealtad son:
-- Primeramente, estimular en los cliente la compra o el consumo de un producto o servicio.
+- Primeramente, estimular en los clientes la compra o el consumo de un producto o servicio.
 - En segunda, permite generar información respecto al consumo de los clientes lo cual a su vez favorece:
   - Conocer a nuestro cliente.
   - Segmentar los clientes.
@@ -31,21 +31,21 @@ Cuando el cliente llena la tarjeta de sellos, es acreedor a un platillo gratis y
 
 Aunque ha dado buenos resultados este sistema, Don Brunch ha notado algunas desventajas, por ejemplo:
 * Al ser una tarjeta física, hay ocasiones en las que el cliente pierde la tarjeta y la única forma de validar los sellos que tenía la BrunchyCard es pedirle al cliente alguna foto reciente de la tarjeta.
-* La solución anterior es una solución a medias, ya que hay que confiar en que el cliente este mostrando una foto que el mismo haya tomado y no sea una foto de una BrunchyCard mas llena de sellos.
+* La solución anterior es una solución a medias, ya que hay que confiar en que el cliente este mostrando una foto que el mismo haya tomado y no sea una foto de una BrunchyCard más llena de sellos.
 * Los sellos solo se puede poner de forma física, es decir, si el cliente pide comida a domicilio no hay forma de hacerle sellarle la BrunchyCard.
 * No importa la cantidad de consumo, el sello aplica si consumes $150 o $800 pesos, no hay una recompensa mayor por mayor consumo.
-* La BrunchyCard no tiene vigencia: no hay un incentivo para consumir mas o perder los sellos porque no hay una caducidad como tal.
-* No hay un registro de la información de los sellos, es decir, solo existe un sello como prueba de una compra en alguna sucursal, pero no se tiene registro de cual fue el monto de la compra de algun sello, cuando se realizo, en que sucursal se hizo la compra.
+* La BrunchyCard no tiene vigencia: no hay un incentivo para consumir más o perder los sellos porque no hay una caducidad como tal.
+* No hay un registro de la información de los sellos, es decir, solo existe un sello como prueba de una compra en alguna sucursal, pero no se tiene registro de cuál fue el monto de la compra de algún sello, cuando se realizó, en que sucursal se hizo la compra.
 * No hay un registro de cuantas tarjetas ha canjeado un cliente.
 * Solo hay una promoción o beneficio que se puede obtener al canjear la BrunchyCard una vez llenado los sellos.
 
 ### Solicitud de nuevo sistema
 
 Gracias al networking que hemos hecho, tuvimos la oportunidad de conocer y tener una junta con el Don Brunch en la cual nos presentamos, hablamos de nuestra experiencia como ingenieros de software, y nos platicó acerca de su negocio y su sistema actual. 
-Después de una larga charla en la que le planteamos los beneficios de llevar su sistema de lealtad a una aplicación, nos contrato para desarrollar una aplicación que le ayude a adiminstrar su programa de lealtad actual ademas de incorporar mejoras en el mismo.
+Después de una larga charla en la que le planteamos los beneficios de llevar su sistema de lealtad a una aplicación, nos contrató para desarrollar una aplicación que le ayude a administrar su programa de lealtad actual además de incorporar mejoras en el mismo.
 Sabemos que los negocios cambian constantemente por diversos factores, y eso mismo le hicimos saber eso a Don Brunch, que nuestra aplicación le permitirá tener un mayor control sobre su proceso actual y la robustez de nuestro sistema permitirá adicionar nuevas funcionalidades en el futuro, pero primero necesitamos partir de unos requerimientos base los cuales necesitamos definirlos junto con Don Brunch para tener claras las expectativas de la aplicación.
 
-Después de varias semanas de entablar comunicación con el dueño, en la cual estuvimos acordando cuales son las necesidades principales por cubrir en la aplicación, y luego de la resolución de algunas dudas que tuvimos respecto al modelo y reglas de su negocio así como proponer interfaces de usuario, llegamos a una serie de requisitos para esta primera etapa. Además, Don Brunch ya tenía nombre para la aplicación: la BrunchyApp.
+Después de varias semanas de entablar comunicación con el dueño, en la cual estuvimos acordando cuales son las necesidades principales por cubrir en la aplicación, y luego de la resolución de algunas dudas que tuvimos respecto al modelo y reglas de su negocio, así como proponer interfaces de usuario, llegamos a una serie de requisitos para esta primera etapa. Además, Don Brunch ya tenía nombre para la aplicación: la BrunchyApp.
 
 # BrunchyApp
 
@@ -54,7 +54,7 @@ Junto con Don Brunch, establecimos la serie de funcionalidades que debe de tener
 
 ## Actores o entidades
 
-Para efectos de tener una mejor comunicación con Don Brunch, y saber ambas partes de lo que se esta hablando, se estableció la lista de actores u entidades que interactuan en la aplicación. Tener este información nos ayudará a evitar malos entendidos entre ambas partes, a agilizar el desarrollo y que el contexto de las reglas de negocio del BruncyTime se permeé sin complicaciones en nuestro equipo de desarrollo.
+Para efectos de tener una mejor comunicación con Don Brunch, y saber ambas partes de lo que se está hablando, se estableció la lista de actores u entidades que interactúan en la aplicación. Tener esta información nos ayudará a evitar malos entendidos entre ambas partes, a agilizar el desarrollo y que el contexto de las reglas de negocio del BruncyTime se permeé sin complicaciones en nuestro equipo de desarrollo.
 
 | Actor            | Descripción                                                                                                        |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -65,7 +65,7 @@ Para efectos de tener una mejor comunicación con Don Brunch, y saber ambas part
 | BrunchyPunto     | Representa un punto obtenido por una compra realizada (1 BrunchyPunto por cada $10 MXN)                            |
 | BrunchyPromocion | Representa una promoción que es un beneficio que se otorga al cliente luego de cierta cantidad de puntos obtenidos |
 
-Las especificaciones de cada entidad se definen mas abajo en este documento.
+Las especificaciones de cada entidad se definen más abajo en este documento.
 
 
 # Fases de desarrollo
@@ -75,9 +75,9 @@ Junto con Don Brunch, acordamos que el desarrollo de la primera etapa quedará d
 ## Fase 1 - Programación de servicios de BrunchyApp (usando "dummy data")
 
 Es esta primera fase del desarrollo, consistirá en desarrollar toda la lógica de servicios de la BrunchyApp, usando datos de prueba, en la cual se puedan simular los procesos que tendrá la BrunchyApp pero a través de una aplicación de línea de comandos (aplicación de consola). 
-Al finalizar esta fase, tendremos todos los servicios que daran soporte a la BrunchyApp, los cuales permitirán que se pueda visualizar la información en diversos módulos y pantallas del sistema. 
+Al finalizar esta fase, tendremos todos los servicios que darán soporte a la BrunchyApp, los cuales permitirán que se pueda visualizar la información en diversos módulos y pantallas del sistema. 
 Las condiciones de esta fase son:
-- Todos los datos de las entidades serán información de prueba o "dummy data", ya que aún no se cuenta con los procesos para gestiónar esa información. 
+- Todos los datos de las entidades serán información de prueba o "dummy data", ya que aún no se cuenta con los procesos para gestionar esa información. 
 - El proceso de canje se podrá simular en la aplicación, de tal forma que se podrá visualizar el proceso una vez terminada la BrunchyApp, pero no habrá registro del canje.
 - La simulación del proceso de inicio se sesión se hará con la "dummy data".
 - La información tanto de usuarios, clientes, sucursales, brunchypuntos y brunchypromos podrá ser vista desde las pantallas de listados.
@@ -87,11 +87,11 @@ Las condiciones de esta fase son:
 
 El entregable de la segunda fase consiste es la versión inicial de la interfaz de usuario la cual permita gestionar la información (dar de alta, dar baja y modificar registros), realizar el proceso de de canje de puntos, el inicio de sesión e identificación del usuario, y el registro en una base de datos de la información.
 Las condiciones de esta fase son:
-- La aplicación debe tener una interfaz visual a traves de la cual se pueda interactuar (ya no se permite una aplicación de línea de comandos).
+- La aplicación debe tener una interfaz visual a través de la cual se pueda interactuar (ya no se permite una aplicación de línea de comandos).
 - La información deberá poderse registrar en una base de datos (ya no será permitido el uso de "dummy data"). 
 - El proceso de alta de todas las entidades es requerido, las bajas y modificaciones son opcionales.
 - Las pantallas requeridas son todas las que intervienen en el proceso de ingreso al sistema, alta de registros, listados y canje de puntos. El resto de las pantallas son opcionales.
-- Se debe distinguir que usuario esta utilizando la aplicación.
+- Se debe distinguir que usuario está utilizando la aplicación.
 - Se requiere que el proceso de canje de puntos este presente en esta fase, y que su información se guarde en base de datos.
 - Las validaciones de la información son opcionales.
 
@@ -105,15 +105,15 @@ Cada reporte consta de 2 partes, una obligatoria y una opcional:
 - Debe tener una pantalla donde se puede visualizar la información del reporte
 - Se puede tener una opción/botón dentro de dicha pantalla para generar un archivo CSV para su uso posterior en Excel.
 
-Los reportes a generar son:
+Los reportes por generar son:
 1. Reporte de los clientes con puntos ordenados de mayor cantidad de puntos a menor cantidad.
-2. Reporte de las BrunchyPromocion canjeadas ordenadas de mayor veces canjeada a menor cantidad de canjes.
+2. Reporte de las BrunchyPromocion canjeadas ordenadas de mayorer veces canjeada a menor cantidad de canjes.
 3. Reporte de los clientes con monto total de compras hechas de mayor a menor monto.
   
 Las condiciones de esta fase son:
 - Toda la información se deberá guardar en una base de datos o archivo.
 - Los procesos de alta, baja y modificación son requeridos.
-- Todas las pantallas de alta, baja y modificacion de registros son requeridos.
+- Todas las pantallas de alta, baja y modificación de registros son requeridos.
 - El uso de fotografías de los usuarios es opcional.
 - Al menos un reporte es requerido, cualquiera, los otros son opcionales.
 - Las validaciones de la información en las pantallas de alta y modificación de registros son requeridas.
@@ -121,18 +121,18 @@ Las condiciones de esta fase son:
 
 ## QA - Evaluación
 
-Para la revisión de cada una de las fases establecimos un sencillo sistema de puntaje, de 0 a 100, donde hay puntos obligatorios y puntos requeridos, debemos completar los requeridos por lo menos para poder tener poducto minimo viable.
+Para la revisión de cada una de las fases establecimos un sencillo sistema de puntaje, de 0 a 100, donde hay puntos obligatorios y puntos requeridos, debemos completar los requeridos por lo menos para poder tener producto mínimo viable.
 
 ### Evaluación de fase 1
 | Tipo      | Descripción                                                     | Puntos |
 | --------- | --------------------------------------------------------------- | ------ |
-| Requerido | Inicio de sesion                                                | 5      |
-| Requerido | Simulacion de captura de Brunchypuntos por venta                | 40     |
+| Requerido | Inicio de sesión                                                | 5      |
+| Requerido | Simulación de captura de Brunchypuntos por venta                | 40     |
 | Requerido | Dummy data de 10 registros de cada entidad                      | 5      |
-| Requerido | Pantallas de listado, alta y modificacion de cliente            | 10     |
-| Opcional  | Pantallas de listado, alta y modificacion de BrunchyPromo       | 10     |
-| Opcional  | Pantallas de listado, alta, baja y modificacion de usuario      | 10     |
-| Opcional  | Pantallas de listado, alta y modificacion de sucursales         | 10     |
+| Requerido | Pantallas de listado, alta y modificación de cliente            | 10     |
+| Opcional  | Pantallas de listado, alta y modificación de BrunchyPromo       | 10     |
+| Opcional  | Pantallas de listado, alta, baja y modificación de usuario      | 10     |
+| Opcional  | Pantallas de listado, alta y modificación de sucursales         | 10     |
 | Opcional  | Lectura y escritura de clientes en archivo binario              | 10     |
 
 ### Evaluación de fase 2
@@ -140,27 +140,27 @@ Para la revisión de cada una de las fases establecimos un sencillo sistema de p
 | --------- | ------------------------------------------------------------------------------------------ | ------ |
 | Requerido | Lectura y escritura de clientes en archivo binario                                         | 15     |
 | Requerido | Pantalla funcional de captura de Brunchypuntos por venta                                   | 25     |
-| Requerido | Inicio de sesion funcional                                                                 | 5      |
-| Requerido | Identificacion del usuario en sesión                                                       | 5      |
+| Requerido | Inicio de sesión funcional                                                                 | 5      |
+| Requerido | Identificación del usuario en sesión                                                       | 5      |
 | Requerido | Pantallas funcionales de alta de clientes, usuarios, sucursales y BrunchyPromos            | 15     |
 | Opcional  | Pantallas no funcionales de listado de clientes, usuarios, sucursales y BrunchyPromos      | 10     |
 | Opcional  | Pantallas no funcionales de baja usuarios                                                  | 5      |
-| Opcional  | Pantallas no funcionales de modificacion de clientes, usuarios, sucursales y BrunchyPromos | 10     |
-| Opcional  | Validacion en pantallas de alta de clientes, usuarios, sucursales y BrunchyPromos          | 10     |
+| Opcional  | Pantallas no funcionales de modificación de clientes, usuarios, sucursales y BrunchyPromos | 10     |
+| Opcional  | Validación en pantallas de alta de clientes, usuarios, sucursales y BrunchyPromos          | 10     |
 
 
 ### Evaluación de fase 3
 | Tipo      | Descripción                                                                             | Puntos |
 | --------- | --------------------------------------------------------------------------------------- | ------ |
-| Requerido | Validacion en pantallas de alta y modificacion de clientes                              | 5      |
+| Requerido | Validación en pantallas de alta y modificación de clientes                              | 5      |
 | Requerido | Reporte de clientes con puntos                                                          | 10     |
 | Requerido | Pantallas funcionales de listado de clientes, usuarios, sucursales y BrunchyPromos      | 5      |
 | Requerido | Pantallas funcionales de baja de clientes, usuarios, sucursales y BrunchyPromos         | 5      |
 | Requerido | Pantallas funcionales de modificacion de clientes, usuarios, sucursales y BrunchyPromos | 5      |
 | Requerido | Restricción de pantallas al cajero por permisos                                         | 15     |
-| Opcional  | Validacion en pantallas de alta y modificacion de Usuarios                              | 5      |
-| Opcional  | Validacion en pantallas de alta y modificacion de sucursales                            | 5      |
-| Opcional  | Validacion en pantallas de alta y modificacion de BrunchyPromos                         | 5      |
+| Opcional  | Validación en pantallas de alta y modificación de Usuarios                              | 5      |
+| Opcional  | Validación en pantallas de alta y modificación de sucursales                            | 5      |
+| Opcional  | Validación en pantallas de alta y modificación de BrunchyPromos                         | 5      |
 | Opcional  | Reporte de clientes con monto total de compras                                          | 10     |
 | Opcional  | Reporte de BrunchyPromos                                                                | 10     |
 | Opcional  | Uso de fotos en la identificación del usuario en sesión                                 | 10     |
@@ -171,16 +171,19 @@ Para la revisión de cada una de las fases establecimos un sencillo sistema de p
 
 # Anexos
 
-## Espeficifaciones de las entidades
+## Especificaciones de las entidades
+
+*NOTA* 
+A continuación se definen las propiedades o características principales de las entidades, más no se definen las entidades/propiedades requerida para la elaboración de los reportes. La definición de éstas quedan a discreción del programador. 
 
 ### Usuario
 
 | Campo             | Reglas                                                                                                                                                                                          | Requerido |
 | ----------------- | --------------------------------------------------------------                                                                                                                                  | --------- |
 | Nombre completo   | Solo caracteres alfabéticos y espacios, mínimo 5 y máximo 50                                                                                                                                    | Si        |
-| Nombre de usuario | Solo caracteres alfanúmericos, mínimo 5 y máximo 20                                                                                                                                             | Si        |
+| Nombre de usuario | Solo caracteres alfanuméricos, mínimo 5 y máximo 20                                                                                                                                             | Si        |
 | Alias del usuario | Solo se permite caracteres alfanuméricos, mínimo 3 y máximo 10                                                                                                                                  | No        |
-| Contraseña        | Mínimo 3 y máximo 10 caracteres, se debe solicitar una letra, un número y un carácter especial como mínimo, si no cuenta on estos requisitos entonces será considerada una contraseña inválida. | Si        |
+| Contraseña        | Mínimo 3 y máximo 10 caracteres, se debe solicitar una letra, un número y un carácter especial como mínimo, si no cuenta con estos requisitos entonces será considerada una contraseña inválida. | Si        |
 | Tipo de usuario   | Para este campo puede ser un listado, radio buttons pero no campos de textos, ya que se le debe indicar al usuario los tipos disponibles sin dejar que los edite                                | Si        |
 | Sucursal          | Para este campo puede ser un listado con las sucursales disponibles                                                                                                                             | No        |
 | Foto              | Cargar una imagen de perfil para el usuario                                                                                                                                                     | No        |
@@ -192,7 +195,7 @@ Para la revisión de cada una de las fases establecimos un sencillo sistema de p
 | Nombre   | Solo caracteres alfabéticos y espacios, mínimo 5 y máximo 50                                    | Si        |
 | Alias    | Solo caracteres alfabéticos y espacios, mínimo 5 y máximo 15                                    | No        |
 | Telefono | Solo caracteres numéricos, de exactamente 10 caracteres                                         | No        |
-| Email    | Validacion de formato email, mínimo 5 y máximo 25                                               | Si        |
+| Email    | Validación de formato email, mínimo 5 y máximo 25                                               | Si        |
 | Sucursal | Este campo debe estar prellenado con el mismo comercio del usuario logeado, es de solo lectura. | Si        |
 | Fecha    | Este campo debe estar prellenado con la fecha del sistema, es de solo lectura.                  | Si        |
 
@@ -226,7 +229,7 @@ Los permisos que tiene cada tipo de usuario se asignan de la siguiente forma:
 | --                            | --            | --     |
 | Alta de usuarios              | ✔             |
 | Baja de usuarios              | ✔             |
-| Modificacion de usuarios      | ✔             |
+| Modificación de usuarios      | ✔             |
 | Listado de usuarios           | ✔             | ✔      |
 | --                            | --            | --     |
 | Alta de sucursales            | ✔             |
@@ -234,7 +237,7 @@ Los permisos que tiene cada tipo de usuario se asignan de la siguiente forma:
 | Listado de sucursales         | ✔             | ✔      |
 | --                            | --            | --     |
 | Alta de BrunchyPromos         | ✔             |
-| Modificacion de BrunchyPromos | ✔             |
+| Modificación de BrunchyPromos | ✔             |
 | Listado de BrunchyPromos      | ✔             | ✔      |
 | --                            | --            | --     |
 | Canje de BrunchyPuntos        | ✔             | ✔      |
