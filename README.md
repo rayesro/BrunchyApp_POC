@@ -54,7 +54,7 @@ Junto con Don Brunch, establecimos la serie de funcionalidades que debe de tener
 
 ## Actores o entidades
 
-Para efectos de tener una mejor comunicación con Don Brunch, y saber ambas partes de lo que se está hablando, se estableció la lista de actores u entidades que interactúan en la aplicación. Tener esta información nos ayudará a evitar malos entendidos entre ambas partes, a agilizar el desarrollo y que el contexto de las reglas de negocio del BruncyTime se permeé sin complicaciones en nuestro equipo de desarrollo.
+Para efectos de tener una mejor comunicación con Don Brunch, y saber ambas partes de lo que se está hablando, se estableció la lista de actores u entidades que interactúan en la aplicación. Tener esta información nos ayudará a evitar malentendidos entre ambas partes, a agilizar el desarrollo y que el contexto de las reglas de negocio del BruncyTime se permeé sin complicaciones en nuestro equipo de desarrollo.
 
 | Actor            | Descripción                                                                                                        |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------ |
