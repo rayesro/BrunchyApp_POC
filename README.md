@@ -12,7 +12,7 @@ Dentro de las ventajas que encontramos en implementar un programa de lealtad son
   - Definir estrategias en base a la generación de dicha información.
 
 
-Hay diversos sistemas que se pueden aplicar para un programa de lealtad, uno de los más comúnes es el sistema de puntos, el cual en básicamente funciona así: 
+Hay diversos sistemas que se pueden aplicar para un programa de lealtad, uno de los más comunes es el sistema de puntos, el cual en básicamente funciona así: 
 1. El cliente hace la compra y obtiene puntos. 
 2. La cantidad depende que obtiene el cliente del monto o total del consumo. 
 3. El cliente puede canjear o redimir sus puntos por alguna recompensa.
@@ -32,7 +32,7 @@ Cuando el cliente llena la tarjeta de sellos, es acreedor a un platillo gratis y
 Aunque ha dado buenos resultados este sistema, Don Brunch ha notado algunas desventajas, por ejemplo:
 * Al ser una tarjeta física, hay ocasiones en las que el cliente pierde la tarjeta y la única forma de validar los sellos que tenía la BrunchyCard es pedirle al cliente alguna foto reciente de la tarjeta.
 * La solución anterior es una solución a medias, ya que hay que confiar en que el cliente este mostrando una foto que el mismo haya tomado y no sea una foto de una BrunchyCard más llena de sellos.
-* Los sellos solo se puede poner de forma física, es decir, si el cliente pide comida a domicilio no hay forma de hacerle sellarle la BrunchyCard.
+* Los sellos solo se pueden poner de forma física, es decir, si el cliente pide comida a domicilio no hay forma de hacerle sellarle la BrunchyCard.
 * No importa la cantidad de consumo, el sello aplica si consumes $150 o $800 pesos, no hay una recompensa mayor por mayor consumo.
 * La BrunchyCard no tiene vigencia: no hay un incentivo para consumir más o perder los sellos porque no hay una caducidad como tal.
 * No hay un registro de la información de los sellos, es decir, solo existe un sello como prueba de una compra en alguna sucursal, pero no se tiene registro de cuál fue el monto de la compra de algún sello, cuando se realizó, en que sucursal se hizo la compra.
@@ -229,7 +229,7 @@ Los permisos que tiene cada tipo de usuario se asignan de la siguiente forma:
 | Permiso                       | Administrador | Cajero |
 | ----------------------------- | ------------- | ------ |
 | Alta de clientes              | ✔             | ✔      |
-| Modificacion de clientes      | ✔             | ✔      |
+| Modificación de clientes      | ✔             | ✔      |
 | Listado de clientes           | ✔             | ✔      |
 | --                            | --            | --     |
 | Alta de usuarios              | ✔             |
@@ -238,7 +238,7 @@ Los permisos que tiene cada tipo de usuario se asignan de la siguiente forma:
 | Listado de usuarios           | ✔             | ✔      |
 | --                            | --            | --     |
 | Alta de sucursales            | ✔             |
-| Modificacion de sucursales    | ✔             |
+| Modificación de sucursales    | ✔             |
 | Listado de sucursales         | ✔             | ✔      |
 | --                            | --            | --     |
 | Alta de BrunchyPromos         | ✔             |
