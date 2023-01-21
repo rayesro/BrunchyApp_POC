@@ -61,7 +61,6 @@ Para efectos de tener una mejor comunicación con Don Brunch, y saber ambas part
 | Usuario          | Un usuario es cualquier empleado de BrunchyTime que puede hacer uso de esta aplicación                             |
 | Cliente          | Un cliente es una persona que asiste o llama al restaurante para ordenar comida                                    |
 | Sucursal         | Representa un restaurante físico                                                                                   |
-| BrunchyCard      | Representa una BrunchyCard física                                                                                  |
 | BrunchyPunto     | Representa un punto obtenido por una compra realizada (1 BrunchyPunto por cada $10 MXN)                            |
 | BrunchyPromocion | Representa una promoción que es un beneficio que se otorga al cliente luego de cierta cantidad de puntos obtenidos |
 
