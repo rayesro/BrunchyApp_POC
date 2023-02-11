@@ -24,7 +24,7 @@ int main()
 	Player players[5];
 
 	do {
-		//system("cls");
+		system("cls");
 		cout << "____METAL SLUG X____" << endl << endl;
 		cout << " 1) Main Mission" << endl;
 		cout << " 2) Multiplayer" << endl;
@@ -37,7 +37,7 @@ int main()
 		{
 		case 1:
 		{
-			//system("cls");
+			system("cls");
 			cout << "____METAL SLUG X____" << endl << endl;
 			cout << "____Main mission____" << endl << endl;
 	
@@ -66,7 +66,7 @@ int main()
 		{
 			int playersCount = 0;
 			
-			//system("cls");
+			system("cls");
 			cout << "____METAL SLUG X____" << endl << endl;
 			cout << "____Multiplayer____" << endl << endl;
 
