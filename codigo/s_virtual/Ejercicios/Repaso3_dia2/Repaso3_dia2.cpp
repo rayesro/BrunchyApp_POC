@@ -54,11 +54,15 @@ Usuario usuarios[10];
 int contUsuarios = 0;
 
 void imprimirMensajeDePausa();
-int imprimeYCapturaOpcionDeMenu(string titulo, string opciones[], int cantidadDeOpciones);
+int imprimeYCapturaOpcionDeMenuCool(string titulo, string opciones[], int cantidadDeOpciones);
+int imprimeYCapturaOpcionDeMenuSimple(string titulo, string opciones[], int cantidadDeOpciones);
 void imprimirMenuPrincipal();
 void imprimirMenuUsuarios();
 void imprimirMenuClientes();
 void imprimirMenuPromociones();
+
+//Punero a funcion
+int (*imprimirPtrToFunc)(string,string[], int);
 
 int main()
 {
@@ -92,12 +96,33 @@ void imprimirMensajeDePausa()
   cin.ignore();
 }
 
-int imprimeYCapturaOpcionDeMenu(string titulo, string opciones[], int cantidadDeOpciones)
+int imprimeYCapturaOpcionDeMenuSimple(string titulo, string opciones[], int cantidadDeOpciones)
 {
   int opcion = 0;
   do {
     system("cls");
-    cout << "-:-:-" << titulo << "-:-:-" << endl;
+    cout << titulo << endl;
+    for (int i = 0; i < cantidadDeOpciones; i++)
+    {
+      cout << " " << i + 1 << "." << opciones[i] << endl;
+    }
+    cout << "Elige la opcion: ";
+    cin >> opcion;
+    if (opcion < 1 || opcion > cantidadDeOpciones)
+    {
+      cout << "Opcion no valida." << endl;
+      imprimirMensajeDePausa();
+    }
+  } while (opcion<1 || opcion>cantidadDeOpciones);
+  return opcion;
+}
+
+int imprimeYCapturaOpcionDeMenuCool(string titulo, string opciones[], int cantidadDeOpciones)
+{
+  int opcion = 0;
+  do {
+    system("cls");
+    cout << ">>>>> " << titulo << "<<<<<" << endl;
     for (int i = 0; i < cantidadDeOpciones; i++)
     {
       cout << " " << i + 1 << "]- " << opciones[i] << endl;
@@ -116,7 +141,10 @@ int imprimeYCapturaOpcionDeMenu(string titulo, string opciones[], int cantidadDe
 void imprimirMenuPrincipal()
 {
   string opcs[] = { "Usuarios", "Clientes", "Promociones", "Salir" };
-  int opcion = imprimeYCapturaOpcionDeMenu("Menu principal", opcs, 4);
+
+  imprimirPtrToFunc = imprimeYCapturaOpcionDeMenuSimple;
+
+  int opcion = imprimirPtrToFunc("Menu principal", opcs, 4);
   switch (opcion)
   {
   case 1:
@@ -153,7 +181,10 @@ void imprimirMenuUsuarios()
     "Editar usuario",
     "Listado de usuarios",
     "Regresar al menu principal" };
-  int opcion = imprimeYCapturaOpcionDeMenu("Menu de Usuarios", opciones, 5);
+
+  imprimirPtrToFunc = imprimeYCapturaOpcionDeMenuCool;
+
+  int opcion = imprimirPtrToFunc("Menu de Usuarios", opciones, 5);
 
   switch (opcion)
   {
@@ -207,7 +238,7 @@ void imprimirMenuClientes()
     "Editar usuario",
     "Listado de clientes",
     "Salir" };
-  int opcion = imprimeYCapturaOpcionDeMenu("Menu de clientesitos", opciones, 5);
+  int opcion = imprimeYCapturaOpcionDeMenuSimple("Menu de clientesitos", opciones, 5);
 
   switch (opcion)
   {
