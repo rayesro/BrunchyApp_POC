@@ -111,6 +111,8 @@ int main()
     CONTADOR_USUARIOS++;
   }
   archivo.close();
+
+
   CONTADOR_USUARIOS--;
   //CONTADOR_USUARIOS = usuarios[cont_us - 1].IDUsuario + 1;
 

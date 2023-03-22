@@ -16,6 +16,9 @@ struct User
 	string tipoUsuario;
 }usuarios[3];
 
+
+
+
 INT_PTR CALLBACK fnDlgInicioSesion
 (
 	HWND hDialgoActual, //referencia al dialogo que se esta siendo desplegado/llamado
