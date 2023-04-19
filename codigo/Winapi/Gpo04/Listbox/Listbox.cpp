@@ -2,9 +2,14 @@
 #include "resource.h"
 #include <string>
 
+#include <fstream>
+
 using namespace std;
 
 HINSTANCE GLOBALhIdentificador;
+
+string ADMINUSER = "RAY";
+string ADMINPASS = "123";
 
 struct Pkmn
 {
@@ -12,6 +17,7 @@ struct Pkmn
 	string descripcion;
 	int numero;
 };
+
 
 Pkmn pokemones[10];
 int CONTADOR_PKMN = 0;
@@ -100,6 +106,48 @@ INT_PTR CALLBACK fnDlgPokedex
 {
 	switch (uMensaje)
 	{
+	case WM_INITDIALOG:
+	{
+		HWND hListbox = GetDlgItem(hDialogoActual, LBX_POKEDEX);
+		for (int i = 0; i < CONTADOR_PKMN; i++)
+		{
+			string formato = "#" + to_string(pokemones[i].numero) + " - " + pokemones[i].nombre;
+			int indice = SendMessageA(hListbox, LB_ADDSTRING, 0, (LPARAM)formato.c_str());
+			SendMessage(hListbox,LB_SETITEMDATA, indice,(LPARAM)&pokemones[i]);
+		}
+
+		HMENU menu = LoadMenu(GLOBALhIdentificador,MAKEINTRESOURCE(IDR_MENU1));
+		SetMenu(hDialogoActual, menu);
+
+	}
+	break;
+	case WM_CLOSE:
+	{
+		int respuesta = MessageBoxA(hDialogoActual, "Esta seguro que quieres cerrar la aplicacion?", "Cerrando app...", MB_OKCANCEL | MB_ICONASTERISK);
+		if (respuesta == IDOK)
+		{
+			fstream archivo;
+			archivo.open("pokemon.bin", ios::out | ios::binary);
+
+			//aux = INICIO;
+			//while (aux != NULL)
+			//{
+			//	//pondriamos la logica para guardar en un archivo 
+			// archivo.write((char*)aux, sizeof(Pkmn));
+			//	aux = aux->sig;
+			//}
+
+			for (int i = 0; i < CONTADOR_PKMN; i++)
+			{
+				//pondriamos la logica para guardar en un archivo 
+				archivo.write((char*)&pokemones[i], sizeof(Pkmn));
+			}
+			archivo.close();
+
+			PostQuitMessage(0);//esta funcion termina la aplicacion
+		}
+	}
+	break;
 	case WM_COMMAND: 
 	{
 		switch (LOWORD(wParam))
@@ -117,6 +165,7 @@ INT_PTR CALLBACK fnDlgPokedex
 
 		}break;
 		case BTN_VENTANA3:
+		case ID_GUARDARPOKEMON:
 		{
 			HWND hDlg = CreateDialogW(
 				GLOBALhIdentificador,
@@ -151,11 +200,11 @@ INT_PTR CALLBACK fnDlgPokedex
 			pokemones[CONTADOR_PKMN].numero = atoi(num); // atoi = ascii to integer
 			if (pokemones[CONTADOR_PKMN].numero > 0 && pokemones[CONTADOR_PKMN].numero < 151)
 			{
-				pokemones[CONTADOR_PKMN].descripcion = pokemones[CONTADOR_PKMN].nombre + " es de la 1a generacion";
+				pokemones[CONTADOR_PKMN].descripcion = pokemones[CONTADOR_PKMN].nombre + "- 1 GEN";
 			}
 			else
 			{
-				pokemones[CONTADOR_PKMN].descripcion = pokemones[CONTADOR_PKMN].nombre + " es de la 2a generacion";
+				pokemones[CONTADOR_PKMN].descripcion = pokemones[CONTADOR_PKMN].nombre + "- 2 GEN";
 			}
 
 			string pkmnRestantes = to_string(10 - CONTADOR_PKMN);
@@ -243,6 +292,27 @@ int WINAPI wWinMain
 	int nTipoMuestraDeVentana
 )
 {
+	//leer los archivos si es que existen
+	fstream archivo;
+	archivo.open("pokemon.bin", ios::in | ios::binary | ios::ate); //at the end
+	if (archivo.is_open()) //is_open valida que el archivo fue abierto con exito
+	{
+
+		int tamanioDeArchivoEnBytes = archivo.tellg(); //tellg (tell get pointer/cursor) -> damos la posicion del cursor
+		int totalPkmns = tamanioDeArchivoEnBytes / sizeof(Pkmn);
+		
+		for (int i = 0; i < totalPkmns; i++)
+		{
+			Pkmn* temporal = new Pkmn;
+			//seekg posiciona el cursor de lectura en X posicion
+			archivo.seekg(i * sizeof(Pkmn));
+			archivo.read((char*)temporal, sizeof(Pkmn));
+			pokemones[i] = *temporal;
+			CONTADOR_PKMN++;
+		}
+	}
+	archivo.close();
+
 	GLOBALhIdentificador = hIdentificador;
 	HWND hDlg = CreateDialogW(
 		//Identificador de la aplicacion
