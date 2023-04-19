@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33414.496
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSTeamsDataExtractor", "MSTeamsDataExtractor.csproj", "{1F94B915-5C8D-4B80-9CA7-A12627F89585}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1F94B915-5C8D-4B80-9CA7-A12627F89585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F94B915-5C8D-4B80-9CA7-A12627F89585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F94B915-5C8D-4B80-9CA7-A12627F89585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F94B915-5C8D-4B80-9CA7-A12627F89585}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D704471A-FFB6-410A-8E6C-A1E7516E5F1D}
+	EndGlobalSection
+EndGlobal
