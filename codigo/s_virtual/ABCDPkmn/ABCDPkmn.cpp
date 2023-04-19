@@ -28,7 +28,6 @@ Defensa
 Velocidad
 */
 
-
 Pkmn* CrearPokemon(string nombre, int num, int atk, int def, int vel)
 {
   Pkmn* pkmn = new Pkmn;
@@ -41,13 +40,12 @@ Pkmn* CrearPokemon(string nombre, int num, int atk, int def, int vel)
   return pkmn;
 }
 
-//
 void ImprimirListaEnConsola()
 {
   Pkmn* aux = Inicio;
   if (aux == NULL)
   {
-    cout << "LA lista esta vacia\n";
+    cout << "La lista esta vacia\n";
     return;
   }
   while (aux != NULL)
@@ -57,7 +55,6 @@ void ImprimirListaEnConsola()
     aux = aux->Siguiente;
   }
 }
-
 
 void InsertarPkmnAlFinalDeLaLista(Pkmn* pkmn)
 {
@@ -75,7 +72,6 @@ void InsertarPkmnAlFinalDeLaLista(Pkmn* pkmn)
     aux->Siguiente = pkmn;
   }
 }
-
 
 Pkmn* BuscarPkmn(string nombreAbuscar)
 {
@@ -98,8 +94,6 @@ void EditarPkmn(Pkmn* pkmnAEditar, string nuevoNombre)
 {
   pkmnAEditar->Nombre = nuevoNombre;
 }
-
-
 
 void ejecutarCodigoDePruebas()
 {
@@ -187,7 +181,6 @@ void ejecutarCodigoDePruebas()
   ImprimirListaEnConsola();
 
 }
-
 
 void darDeAltaUnPokemon()
 {
