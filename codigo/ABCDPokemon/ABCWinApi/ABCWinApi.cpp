@@ -31,6 +31,7 @@ struct Pkmn
 };
 
 Pkmn* Inicio;
+Pkmn* pkmnAEditar;
 
 Pkmn* CrearPokemon(string nombre, int num, int atk, int def, int vel)
 {
@@ -100,6 +101,92 @@ INT_PTR CALLBACK fDlgCrearPkmn(HWND hDialogoActual, UINT uMensaje, WPARAM wParam
       SendMessageA(hListbox, LB_ADDSTRING, 0, (LPARAM)"Prueba");
     }
     break;
+    case BTN_ELIMINAR:
+    {
+      int indice = SendDlgItemMessage(hDialogoActual, LBX_POKEDEX, LB_GETCURSEL, NULL, NULL);
+      
+      Pkmn* pkmnAEliminar =
+        (Pkmn*)SendDlgItemMessage(
+          hDialogoActual, //dialogo actual donde se encuentra el listbox
+          LBX_POKEDEX,    //ID del listbox
+          LB_GETITEMDATA, //Mensaje que indica que vamos a obtener los datos guardados en el registro indicado por el indice
+          indice,         //El indice de elemento del listado
+          NULL);
+
+      //Para eliminar un nodo de la lista hay 3 escenarios:
+      //Cuando el nodo esta al principio, en medio o al final de la lista
+
+      if (pkmnAEliminar == Inicio)
+      {
+        Inicio = Inicio->Siguiente;
+        delete pkmnAEliminar;
+      }
+      else if (pkmnAEliminar->Siguiente == NULL)
+      {
+        Pkmn* aux = Inicio;
+        while (aux->Siguiente != pkmnAEliminar)
+        {
+          aux = aux->Siguiente;
+        }
+        aux->Siguiente = NULL;
+        delete pkmnAEliminar;
+      }
+      else {
+        Pkmn* aux = Inicio;
+        while (aux->Siguiente != pkmnAEliminar)
+        {
+          aux = aux->Siguiente;
+        }
+        aux->Siguiente = pkmnAEliminar->Siguiente;
+        delete pkmnAEliminar;
+      }
+
+      SendDlgItemMessage(hDialogoActual, LBX_POKEDEX, LB_DELETESTRING, indice, 0);
+    }
+    break;  
+    case BTN_EDITAR:
+    {
+      char nombre[30];
+      char num[4];//124\0
+      char  atk[4];
+      char  def[4];
+      char  vel[4];
+
+      GetDlgItemTextA(hDialogoActual, TXT_NOMBRE, nombre, 30);
+      GetDlgItemTextA(hDialogoActual, TXT_NUMERO, num, 4);
+      GetDlgItemTextA(hDialogoActual, TXT_ATAQUE, atk, 4);
+      GetDlgItemTextA(hDialogoActual, TXT_DEFENSA, def, 4);
+      GetDlgItemTextA(hDialogoActual, TXT_VELOCIDAD, vel, 4);
+
+      string Nombre(nombre);
+      int Numero = atoi(num); // ascii to integer - para convertir de char[] a int
+      int Ataque = atoi(atk);
+      int Defensa = atoi(def);
+      int Velocidad = atoi(vel);
+
+      pkmnAEditar->Nombre = Nombre;
+      pkmnAEditar->Numero = Numero;
+      pkmnAEditar->Ataque = Ataque;
+      pkmnAEditar->Defensa = Defensa;
+      pkmnAEditar->Velocidad = Velocidad;
+
+      //Al final limpiamos los campos de texto
+      LimpiarDatos(hDialogoActual);
+
+
+      //Aqui eliminamos la cadena desactualizada del Listbox
+      int indice = SendDlgItemMessage(hDialogoActual, LBX_POKEDEX, LB_GETCURSEL, NULL, NULL);
+      SendDlgItemMessage(hDialogoActual, LBX_POKEDEX, LB_DELETESTRING, indice, 0);
+
+
+      HWND hListbox = GetDlgItem(hDialogoActual, LBX_POKEDEX);
+
+      string texto = "#" + to_string(Numero) + " - " + Nombre;
+      indice = SendMessageA(hListbox, LB_ADDSTRING, 0, (LPARAM)texto.c_str());
+      SendMessage(hListbox, LB_SETITEMDATA, indice, (LPARAM)pkmnAEditar);
+      
+    }
+    break;
     case BTN_CREAPKMN:
     {
       char nombre[30];
@@ -166,7 +253,7 @@ INT_PTR CALLBACK fDlgCrearPkmn(HWND hDialogoActual, UINT uMensaje, WPARAM wParam
         int indice = SendDlgItemMessage(hDialogoActual, LBX_POKEDEX, LB_GETCURSEL, NULL, NULL);
         //7-Obtenemos los datos guardados en el registro indicado por el indice y convertimos
         //esos datos a nuestra estructura
-        Pkmn* pkmn = 
+        pkmnAEditar =
           (Pkmn*)SendDlgItemMessage(
             hDialogoActual, //dialogo actual donde se encuentra el listbox
             LBX_POKEDEX,    //ID del listbox
@@ -174,14 +261,14 @@ INT_PTR CALLBACK fDlgCrearPkmn(HWND hDialogoActual, UINT uMensaje, WPARAM wParam
             indice,         //El indice de elemento del listado
             NULL);
 
-        string texto = "El pokemon seleccionado fue el #" + to_string(pkmn->Numero) + " - " + pkmn->Nombre;
+        string texto = "El pokemon seleccionado fue el #" + to_string(pkmnAEditar->Numero) + " - " + pkmnAEditar->Nombre;
         MessageBoxA(hDialogoActual, texto.c_str(), "Prueba", MB_OK);
 
-        SetDlgItemTextA(hDialogoActual, TXT_NOMBRE, pkmn->Nombre.c_str());
-        SetDlgItemTextA(hDialogoActual, TXT_NUMERO, to_string(pkmn->Numero).c_str());
-        SetDlgItemTextA(hDialogoActual, TXT_ATAQUE, to_string(pkmn->Ataque).c_str());
-        SetDlgItemTextA(hDialogoActual, TXT_DEFENSA, to_string(pkmn->Defensa).c_str());
-        SetDlgItemTextA(hDialogoActual, TXT_VELOCIDAD, to_string(pkmn->Velocidad).c_str());
+        SetDlgItemTextA(hDialogoActual, TXT_NOMBRE, pkmnAEditar->Nombre.c_str());
+        SetDlgItemTextA(hDialogoActual, TXT_NUMERO, to_string(pkmnAEditar->Numero).c_str());
+        SetDlgItemTextA(hDialogoActual, TXT_ATAQUE, to_string(pkmnAEditar->Ataque).c_str());
+        SetDlgItemTextA(hDialogoActual, TXT_DEFENSA, to_string(pkmnAEditar->Defensa).c_str());
+        SetDlgItemTextA(hDialogoActual, TXT_VELOCIDAD, to_string(pkmnAEditar->Velocidad).c_str());
 
         break;
       }

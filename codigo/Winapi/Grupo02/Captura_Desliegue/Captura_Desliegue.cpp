@@ -5,6 +5,9 @@
 
 using namespace std;
 
+#define USUARIO_ADMIN  1
+#define USUARIO_CAJERO  2
+
 //HWND - HANDLER WINDOW - MANEJADOR DE VENTANA - REFERENCIA A DIALOGO O COMPONENTE/CONTROL
 
 //INT_PTR CALLBACK fn
@@ -22,7 +25,18 @@ using namespace std;
 //los callbacks son las funciones que definen el comportamiento de un dialogo
 
 HINSTANCE IdentificadorAppGlobal;
-string usuarioEnSesion;
+//string usuarioEnSesion;
+
+struct Usuario
+{
+	string Nombre;
+	string Contrasena;
+	int TipoUsuario; // 1 - ADMIN, 2 - CAJERO
+};
+
+Usuario usuarios[3];
+
+Usuario usuarioEnSesion;
 
 INT_PTR CALLBACK fnDlgPantallaPrincipal
 (
@@ -36,8 +50,20 @@ INT_PTR CALLBACK fnDlgPantallaPrincipal
 	{
 	case WM_INITDIALOG:
 	{
-		string saludo = "Bienvenido, " + usuarioEnSesion;
+		string saludo = "Bienvenido, " +usuarioEnSesion.Nombre + "!!!";
 		SetDlgItemTextA(hDialgoActual, LBL_SALUDO, saludo.c_str());
+
+		if (usuarioEnSesion.TipoUsuario == USUARIO_ADMIN)
+		{
+			HMENU menu = LoadMenu(IdentificadorAppGlobal, MAKEINTRESOURCE(IDR_MENU1));
+			SetMenu(hDialgoActual, menu);
+		}
+		else
+		{
+			HMENU menu = LoadMenu(IdentificadorAppGlobal, MAKEINTRESOURCE(IDR_MENU2));
+			SetMenu(hDialgoActual, menu);
+		}
+
 	}
 	break;
 	case WM_CLOSE:
@@ -144,35 +170,49 @@ INT_PTR CALLBACK fnDlgInicioSesion
 			{
 				SetDlgItemTextA(hDialgoActual, LBL_ERRORCONTRASENA, "La contrasena debe tener mas de 3 caracteres");
 			}
-			
 
+			bool usuarioHaIniciadoSesion = false;
 
-			if (usStr == "ray" && usContra == "123")
+			for (int i = 0; i < 3; i++)
 			{
-				string mensaje = "El usuario " + usStr + " ha iniciado sesion";
-				MessageBoxA(
-					hDialgoActual,
-					mensaje.c_str(),
-					"Sesion iniciada",
-					MB_OK | MB_ICONINFORMATION
-				);
+				if (usStr == usuarios[i].Nombre && usContra == usuarios[i].Contrasena)
+				{
+					usuarioHaIniciadoSesion = true;
+					string mensaje = "El usuario " + usStr + " ha iniciado sesion";
+					MessageBoxA(
+						hDialgoActual,
+						mensaje.c_str(),
+						"Sesion iniciada",
+						MB_OK | MB_ICONINFORMATION
+					);
 
-				usuarioEnSesion.append(usStr);
+					usuarioEnSesion = usuarios[i];
 
-				HWND hDlg = CreateDialogW(
-					IdentificadorAppGlobal,										//Identificador de la aplicacion 
-					MAKEINTRESOURCE(DLG_PANTALLAPRINCIPAL), //Id del dialogo
-					NULL,															// HWND de Referencia a la ventana padre
-					fnDlgPantallaPrincipal
-				);
+					//DETECTAR QUE RADIO BUTTON HA SIDO SELECCIONADO
+					if (IsDlgButtonChecked(hDialgoActual, RBT_CAJERO) == BST_CHECKED)
+					{
+						usuarioEnSesion.TipoUsuario = USUARIO_CAJERO;
+					}
+					else if (IsDlgButtonChecked(hDialgoActual, RBT_ADMIN) == BST_CHECKED)
+					{
+						usuarioEnSesion.TipoUsuario = USUARIO_ADMIN;
+					}
 
 
-				ShowWindow(hDlg, SW_SHOW);
-				DestroyWindow(hDialgoActual);
+					HWND hDlg = CreateDialogW(
+						IdentificadorAppGlobal,										//Identificador de la aplicacion 
+						MAKEINTRESOURCE(DLG_PANTALLAPRINCIPAL), //Id del dialogo
+						NULL,															// HWND de Referencia a la ventana padre
+						fnDlgPantallaPrincipal
+					);
 
+
+					ShowWindow(hDlg, SW_SHOW);
+					DestroyWindow(hDialgoActual);
+				}
 			}
-			else
-
+			
+			if(usuarioHaIniciadoSesion == false)
 			{
 				MessageBoxA(
 					hDialgoActual,
@@ -237,6 +277,26 @@ int WINAPI wWinMain(
 {
 	IdentificadorAppGlobal = hIdentificador;
 
+
+	Usuario* us1 = new Usuario;
+	us1->Nombre = "Ray";
+	us1->Contrasena = "123";
+	us1->TipoUsuario = USUARIO_ADMIN;
+
+	Usuario* us2 = new Usuario;
+	us2->Nombre = "Angy";
+	us2->Contrasena = "456";
+	us2->TipoUsuario = USUARIO_ADMIN;
+
+	Usuario* us3 = new Usuario;
+	us3->Nombre = "Pepe";
+	us3->Contrasena = "000";
+	us3->TipoUsuario = USUARIO_CAJERO;
+
+	usuarios[0] = *us1;
+	usuarios[1] = *us2;
+	usuarios[2] = *us3;
+
 	HWND hDlgInicioSesion = CreateDialogW(
 		hIdentificador,										//Identificador de la aplicacion 
 		MAKEINTRESOURCE(DLG_INICIOSESION), //Id del dialogo
@@ -257,3 +317,4 @@ int WINAPI wWinMain(
 
 	return 0;
 }
+

@@ -4,8 +4,11 @@
 //
 #define BTN_CREAPKMN                    3
 #define BTN_LIMPIARDATOS                4
+#define BTN_EDITAR                      5
 #define BTN_PRUEBAS                     6
 #define BTN_CSV                         7
+#define BTN_CREAPKMN3                   8
+#define BTN_ELIMINAR                    8
 #define DLG_CREARPKMN                   101
 #define TXT_NOMBRE                      1001
 #define TXT_NUMERO                      1002
