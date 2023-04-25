@@ -5,6 +5,8 @@
 
 using namespace std;
 
+wchar_t* rutaDeImageEnDisco = new wchar_t[255];
+HINSTANCE GLOBAL_hInstancia;
 struct Pkmn
 {
   string Nombre;
@@ -12,6 +14,7 @@ struct Pkmn
   int Ataque;
   int Defensa;
   int Velocidad;
+  wchar_t* rutaDeImagen;
   Pkmn* Siguiente;
 
   string GenerarEnFormatoCSV()
@@ -92,6 +95,34 @@ INT_PTR CALLBACK fDlgCrearPkmn(HWND hDialogoActual, UINT uMensaje, WPARAM wParam
         aux = aux->Siguiente;
       }
       archivo.close();
+
+    }
+    break;
+    case BTN_CARGARFOTO:
+    {
+
+      OPENFILENAME ofn;
+      ZeroMemory(&ofn, sizeof(OPENFILENAME));
+
+      ofn.hwndOwner = hDialogoActual; // definimos el dialogo padre
+      ofn.lStructSize = sizeof(OPENFILENAME); // tamano de la estructura
+      ofn.lpstrFile = rutaDeImageEnDisco; // aqui se guarda el nombre/ruta de la imagen
+      ofn.nMaxFile = 255; // longitud del nombre del archivo
+      ofn.lpstrDefExt = L"bmp"; //extension de archivos de imagen a manejar
+      ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_NOCHANGEDIR;
+      ofn.lpstrFilter = L"Imagenes BMP\0*.bmp";
+
+      if (GetOpenFileName(&ofn))
+      {
+        //cargo la imagen de mapa de bits en memoria
+        HBITMAP bitmap = (HBITMAP)LoadImage(GLOBAL_hInstancia, rutaDeImageEnDisco, IMAGE_BITMAP, 256, 256, LR_LOADFROMFILE);
+        //obtengo la referencia al picture control
+        HWND hPictureControl = GetDlgItem(hDialogoActual, PIC_FOTO);
+        //Enviar la imagen al control
+        SendMessage(hPictureControl, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bitmap);
+
+        //u.image = rutaDeImageEnDisco;
+      }
 
     }
     break;
@@ -208,6 +239,16 @@ INT_PTR CALLBACK fDlgCrearPkmn(HWND hDialogoActual, UINT uMensaje, WPARAM wParam
       int Velocidad = atoi(vel);
 
       Pkmn* pkmn = CrearPokemon(Nombre, Numero, Ataque, Defensa, Velocidad);
+
+      pkmn->rutaDeImagen = new wchar_t[255];
+
+      for (int i = 0; i < 255; i++)
+      {
+        pkmn->rutaDeImagen[i] = rutaDeImageEnDisco[i];
+      }
+
+
+
       InsertarPkmnAlFinalDeLaLista(pkmn);
 
       //Para poner datos en el listbox, tenemos que seguir los siguientes pasos...
@@ -270,6 +311,12 @@ INT_PTR CALLBACK fDlgCrearPkmn(HWND hDialogoActual, UINT uMensaje, WPARAM wParam
         SetDlgItemTextA(hDialogoActual, TXT_DEFENSA, to_string(pkmnAEditar->Defensa).c_str());
         SetDlgItemTextA(hDialogoActual, TXT_VELOCIDAD, to_string(pkmnAEditar->Velocidad).c_str());
 
+        HBITMAP bitmap = (HBITMAP)LoadImage(GLOBAL_hInstancia, pkmnAEditar->rutaDeImagen, IMAGE_BITMAP, 256, 256, LR_LOADFROMFILE);
+        //obtengo la referencia al picture control
+        HWND hPictureControl = GetDlgItem(hDialogoActual, PIC_FOTO);
+        //Enviar la imagen al control
+        SendMessage(hPictureControl, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bitmap);
+
         break;
       }
     }
@@ -286,7 +333,7 @@ INT_PTR CALLBACK fDlgCrearPkmn(HWND hDialogoActual, UINT uMensaje, WPARAM wParam
 
 int WINAPI wWinMain(HINSTANCE hIdentificadorApp, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-  
+  GLOBAL_hInstancia = hIdentificadorApp;
   HWND hDlg = CreateDialogW(
     hIdentificadorApp,
     MAKEINTRESOURCE(DLG_CREARPKMN),

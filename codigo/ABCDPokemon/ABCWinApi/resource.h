@@ -7,8 +7,9 @@
 #define BTN_EDITAR                      5
 #define BTN_PRUEBAS                     6
 #define BTN_CSV                         7
-#define BTN_CREAPKMN3                   8
 #define BTN_ELIMINAR                    8
+#define BTN_CSV2                        9
+#define BTN_CARGARFOTO                  9
 #define DLG_CREARPKMN                   101
 #define TXT_NOMBRE                      1001
 #define TXT_NUMERO                      1002
@@ -17,6 +18,7 @@
 #define TXT_VELOCIDAD                   1005
 #define IDC_LIST1                       1006
 #define LBX_POKEDEX                     1006
+#define PIC_FOTO                        1007
 
 // Next default values for new objects
 // 
@@ -24,7 +26,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        103
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1007
+#define _APS_NEXT_CONTROL_VALUE         1008
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
