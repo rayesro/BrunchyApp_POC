@@ -1,10 +1,11 @@
 //{{NO_DEPENDENCIES}}
-// Archivo de inclusión generado de Microsoft Visual C++.
-// Usado por ABCWinApi.rc
+// Microsoft Visual C++ generated include file.
+// Used by ABCWinApi.rc
 //
 #define BTN_CREAPKMN                    3
 #define BTN_LIMPIARDATOS                4
 #define BTN_PRUEBAS                     6
+#define BTN_CSV                         7
 #define DLG_CREARPKMN                   101
 #define TXT_NOMBRE                      1001
 #define TXT_NUMERO                      1002

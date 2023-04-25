@@ -1,6 +1,8 @@
 #include <windows.h>
 #include <string>
 #include "resource.h"
+#include <fstream>
+
 using namespace std;
 
 struct Pkmn
@@ -11,6 +13,21 @@ struct Pkmn
   int Defensa;
   int Velocidad;
   Pkmn* Siguiente;
+
+  string GenerarEnFormatoCSV()
+  {
+    string str;
+    str.append(Nombre);
+    str.append(",");
+    str.append(to_string(Numero));
+    str.append(",");
+    str.append(to_string(Ataque));
+    str.append(",");
+    str.append(to_string(Defensa));
+    str.append(",");
+    str.append(to_string(Velocidad));
+    return str;
+  }
 };
 
 Pkmn* Inicio;
@@ -61,6 +78,22 @@ INT_PTR CALLBACK fDlgCrearPkmn(HWND hDialogoActual, UINT uMensaje, WPARAM wParam
   {
     switch (LOWORD(wParam))
     {
+
+    case BTN_CSV:
+    {
+      fstream archivo;
+      archivo.open("pkmn.csv", ios::out);
+      Pkmn* aux = Inicio;
+      while (aux != NULL)
+      {
+        archivo << aux->GenerarEnFormatoCSV() << "\n";
+        //archivo << aux->Nombre << "," << aux->Numero << "," << aux->Ataque << "," << aux->Defensa << "," << aux->Velocidad << "\n";
+        aux = aux->Siguiente;
+      }
+      archivo.close();
+
+    }
+    break;
     case BTN_PRUEBAS:
     {
       HWND hListbox = GetDlgItem(hDialogoActual, LBX_POKEDEX);
