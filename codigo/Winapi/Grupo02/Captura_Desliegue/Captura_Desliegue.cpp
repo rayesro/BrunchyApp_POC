@@ -31,6 +31,7 @@ struct Usuario
 {
 	string Nombre;
 	string Contrasena;
+	wchar_t* imagen;
 	int TipoUsuario; // 1 - ADMIN, 2 - CAJERO
 };
 
@@ -52,6 +53,10 @@ INT_PTR CALLBACK fnDlgPantallaPrincipal
 	{
 		string saludo = "Bienvenido, " +usuarioEnSesion.Nombre + "!!!";
 		SetDlgItemTextA(hDialgoActual, LBL_SALUDO, saludo.c_str());
+
+		HBITMAP bitmap = (HBITMAP)LoadImage(GLOBAL_hInstancia, pkmnAEditar->rutaDeImagen, IMAGE_BITMAP, 256, 256, LR_LOADFROMFILE);
+		HWND hPictureControl = GetDlgItem(hDialogoActual, PIC_FOTO);
+		SendMessage(hPictureControl, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bitmap);
 
 		if (usuarioEnSesion.TipoUsuario == USUARIO_ADMIN)
 		{

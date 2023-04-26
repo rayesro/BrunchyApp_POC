@@ -312,9 +312,7 @@ INT_PTR CALLBACK fDlgCrearPkmn(HWND hDialogoActual, UINT uMensaje, WPARAM wParam
         SetDlgItemTextA(hDialogoActual, TXT_VELOCIDAD, to_string(pkmnAEditar->Velocidad).c_str());
 
         HBITMAP bitmap = (HBITMAP)LoadImage(GLOBAL_hInstancia, pkmnAEditar->rutaDeImagen, IMAGE_BITMAP, 256, 256, LR_LOADFROMFILE);
-        //obtengo la referencia al picture control
         HWND hPictureControl = GetDlgItem(hDialogoActual, PIC_FOTO);
-        //Enviar la imagen al control
         SendMessage(hPictureControl, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bitmap);
 
         break;

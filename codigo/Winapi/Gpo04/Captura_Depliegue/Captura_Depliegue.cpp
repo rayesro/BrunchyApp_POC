@@ -1,23 +1,206 @@
-#include<Windows.h>
+#include <Windows.h>
 #include "resource.h"
 #include <string>
+#include <fstream>
+
 using namespace std;
 
 int contador = 0;
 HINSTANCE GlobalhIdentificador;
 
-enum TipoUsuario{ADMIN,CAJERO};
+#define USUARIO_ADMIN  1 
+#define USUARIO_CAJERO 2
 
-struct User
+struct Usuario{
+	string Nombre;
+	string Contrasena;
+	int TipoUsuario;
+	Usuario* Siguiente;
+
+	wchar_t* RutaImagen;
+};
+
+Usuario* INICIO_LISTA = NULL;
+Usuario* UsuarioEnSesion = NULL;
+
+void GuardarUsuariosEnArchivo()
 {
-	string nom;
-	string contra;
-	int tipoUs;
-	string tipoUsuario;
-}usuarios[3];
+	fstream archivo;
+	archivo.open("usuarios.bin", ios::binary | ios::out);
+
+	Usuario* aux = INICIO_LISTA;
+	while (aux != NULL)
+	{
+		archivo.write((char*)aux,sizeof(Usuario));
+		aux = aux->Siguiente;
+	}
+	archivo.close();
+}
+
+void LeerUsuariosDesdeArchivo()
+{
+	fstream archivo;
+	archivo.open("usuarios.bin", ios::binary | ios::in | ios::ate); //at the end
+
+	if (archivo.is_open())//es validar que el archivo exista y que haya sido abierto correctamente
+	{
+		int tamanoDeArchivo = archivo.tellg(); //tellg devuelve la posicion del cursor
+		int totalDeUsuarios = tamanoDeArchivo / sizeof(Usuario);
+
+		for (int i = 0; i < totalDeUsuarios; i++)
+		{
+			archivo.seekg(i * sizeof(Usuario)); // seekg establecemos la posicion del cursor
+
+			Usuario* temp = new Usuario;
+			archivo.read((char*)temp, sizeof(Usuario));
+			temp->Siguiente = NULL;
+
+			if (INICIO_LISTA == NULL)
+			{
+				INICIO_LISTA = temp;
+			}
+			else
+			{
+				Usuario* aux = INICIO_LISTA;
+				while (aux->Siguiente != NULL)
+				{
+					aux = aux->Siguiente;
+				}
+				aux->Siguiente = temp;
+			}
+		}
+	}
+	archivo.close();
+}
 
 
+void MostrarMensajeDeCierre()
+{
+	int respuesta = MessageBoxA(NULL,"Estas seguro que quieres cerrar la aplicacion?","Terminando aplicacion...",MB_OKCANCEL | MB_ICONQUESTION);
+	if (respuesta == IDOK) //si el usuario le dio click al boton de aceptar en el Messagebox
+	{
+		GuardarUsuariosEnArchivo();
+		PostQuitMessage(0);
+	}
+}
 
+INT_PTR CALLBACK fnDlgPantallaPrincipal(HWND hDialgoActual, UINT uMensaje, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMensaje)
+	{
+	case WM_INITDIALOG:
+	{
+		SetDlgItemTextA(hDialgoActual, LBL_NOMBREUSUARIO, UsuarioEnSesion->Nombre.c_str());
+
+		//1-Obtener la referencia al componente del Listbox, en este caso, al ID LBX_USUARIOS
+		HWND hListbox = GetDlgItem(hDialgoActual, LBX_USUARIOS);
+
+		Usuario* aux = INICIO_LISTA;
+		while (aux != NULL)
+		{
+			//2-Mandar un mensaje para agregar una cadena de texto al listbox usando su HWND y 
+			//3-Guardar el indice que regresa la funcion SendMessageA
+			int indice = SendMessageA(hListbox, LB_ADDSTRING, 0, (LPARAM)aux->Nombre.c_str());
+
+			//4-Usar el indice para establecer datos dentro del listbox
+			SendMessage
+			(
+				hListbox,				//la referencia al listbox ya que a ese listbox vamos a mandar el mensaje
+				LB_SETITEMDATA, //Establece datos en un registro del listbox
+				indice,					//indice del listbox donde va a guardar los datos
+				(LPARAM)aux			//los datos a guardar
+			);
+			aux = aux->Siguiente;
+
+			if (UsuarioEnSesion->TipoUsuario == USUARIO_ADMIN)
+			{
+				HMENU menu = LoadMenu(GlobalhIdentificador, MAKEINTRESOURCE(IDR_MENU1));
+				SetMenu(hDialgoActual, menu);
+			}
+			else
+			{
+				HMENU menu = LoadMenu(GlobalhIdentificador, MAKEINTRESOURCE(IDR_MENU2));
+				SetMenu(hDialgoActual, menu);
+			}
+
+
+		}
+
+	}
+	break;
+	case WM_CLOSE:
+	{
+		MostrarMensajeDeCierre();
+	}
+	break;
+	case WM_COMMAND:
+	{
+		switch (LOWORD(wParam))
+		{
+			case BTN_NUEVO:
+			{
+				//obtenemos los datos de la pantalla
+				char nombreDeUsuario[50], contrasena[50];
+				GetDlgItemTextA(hDialgoActual, TXT_NOMUS, nombreDeUsuario, 50);
+				GetDlgItemTextA(hDialgoActual, TXT_CONTRAUS, contrasena, 50);
+
+				//Convertimos los arreglos de chars a datos tipo string
+				string nombreDeUsuarioStr(nombreDeUsuario);
+				string contrasenaStr(contrasena);
+
+				//craemos un usuario y le asignamos los datos de la pantalla
+				Usuario* nuevoUsuario = new Usuario;
+				nuevoUsuario->Nombre = nombreDeUsuarioStr;
+				nuevoUsuario->Contrasena = contrasenaStr;
+				nuevoUsuario->TipoUsuario = USUARIO_CAJERO;
+				nuevoUsuario->RutaImagen = new wchar_t[255];//reservar memoria para la ruta
+				nuevoUsuario->Siguiente = NULL;
+
+				//metemos al usuario nuevo en la lista
+				if (INICIO_LISTA == NULL)
+				{
+					INICIO_LISTA = nuevoUsuario;
+				}
+				else
+				{
+					Usuario* aux = INICIO_LISTA;
+					while (aux->Siguiente != NULL)
+					{
+						aux = aux->Siguiente;
+					}
+					aux->Siguiente = nuevoUsuario;
+				}
+
+				//metemos al nuevo usuario en el listbox
+				HWND hListbox = GetDlgItem(hDialgoActual, LBX_USUARIOS);
+				int indice = SendMessageA(hListbox, LB_ADDSTRING, 0, (LPARAM)nuevoUsuario->Nombre.c_str());
+				SendMessage(hListbox,LB_SETITEMDATA,indice,(LPARAM)nuevoUsuario);
+			}
+			break;
+			//5-Agregamos el codigo para manejar el evento cuando le demos click a cualquiera de los registros del listbox
+			case LBX_USUARIOS:
+			{
+				switch (HIWORD(wParam))
+				{
+				case LBN_SELCHANGE:
+				{
+					//6-Obtener el indice del registro del listbox al que le dimos click
+					int indice = SendDlgItemMessage(hDialgoActual, LBX_USUARIOS, LB_GETCURSEL, NULL, NULL);
+					//7-Obtenemos los datos guardados en el registro indicado por el indice y convertimos esos datos a nuestra estructura
+					Usuario* us = (Usuario*)SendDlgItemMessage(hDialgoActual,LBX_USUARIOS,LB_GETITEMDATA,indice,NULL);
+
+					SetDlgItemTextA(hDialgoActual, TXT_NOMUS, us->Nombre.c_str());
+					SetDlgItemTextA(hDialgoActual, TXT_CONTRAUS, us->Contrasena.c_str());
+				}
+				break;
+				}
+			}
+		}
+	}
+	break;
+	}
+	return FALSE;
+}
 
 INT_PTR CALLBACK fnDlgInicioSesion
 (
@@ -31,88 +214,33 @@ INT_PTR CALLBACK fnDlgInicioSesion
 	{
 		case WM_INITDIALOG:
 		{
-			SetDlgItemTextA(
-				hDialgoActual,
-				LBL_ERRORUSUARIO,
-				""
-			);
-			SetDlgItemTextA(
-				hDialgoActual,
-				LBL_ERRORCONTRASENA,
-				"_._"
-			);
+			SetDlgItemTextA(hDialgoActual,LBL_ERRORUSUARIO,"");
+			SetDlgItemTextA(hDialgoActual,LBL_ERRORCONTRASENA,"");
 		}
 		break;
 		case WM_COMMAND:
 		{
 			switch (LOWORD(wParam))
 			{
-			case BTN_PRUEBA:
-			{
-				//string s = "0";//aa // aaa ///aaaa
-				//contador++;
-				//for (int i = 0; i < contador; i++)
-				//{
-				//	s += to_string(i+1);
-				//}
-				//SetDlgItemTextA(
-				//	hDialgoActual,
-				//	LBL_ERRORCONTRASENA,
-				//	s.c_str()
-				//);
-				//IDD_DIALOG1
-				HWND hDlg = CreateDialogW(
-					GlobalhIdentificador,
-					MAKEINTRESOURCE(IDD_DIALOG1),
-					NULL,
-					fnDlgInicioSesion
-				);
-
-				ShowWindow(hDlg, SW_SHOW);
-				DestroyWindow(hDialgoActual);
-			}
-			break;
 			case BTN_SALIR:
 			{
-				int respuesta = MessageBoxA(
-					NULL,
-					"Estas seguro que quieres cerrar la aplicacion?",
-					"Cerrando aplicacion...",
-					MB_OKCANCEL | MB_ICONQUESTION
-				);
-
-				if (respuesta == IDOK) //si el usuario le dio click al boton de aceptar en el Messagebox
-				{
-					PostQuitMessage(0);
-				}
+				MostrarMensajeDeCierre();
 			}
-				break;
+			break;
 			case BTN_INICIOSESION:
 			{
-				SetDlgItemTextA(
-					hDialgoActual,
-					LBL_ERRORUSUARIO,
-					""
-				);
+
+				//Obtenemos los textos desde las pantallas y los guardamos en arreglos de chars
 				char nombreDeUsuario[50], contrasena[50];
+				GetDlgItemTextA(hDialgoActual,TXT_USUARIO,nombreDeUsuario,50);
+				GetDlgItemTextA(hDialgoActual,TXT_CONTRASENA,contrasena,50);
 
-				GetDlgItemTextA(
-					hDialgoActual,
-					TXT_USUARIO,
-					nombreDeUsuario,
-					50
-				);
-
-				GetDlgItemTextA(
-					hDialgoActual,
-					TXT_CONTRASENA,
-					contrasena,
-					50
-				);
-
+				//Convertimos los arreglos de chars a datos tipo string
 				string nombreDeUsuarioStr(nombreDeUsuario);
 				string contrasenaStr(contrasena);
 
+
+				//Aqui empezamos la validacion de las credenciales ingresadas
 				bool hayError = false;
 
 				string msjErrorUsuario = "";
@@ -127,7 +255,7 @@ INT_PTR CALLBACK fnDlgInicioSesion
 
 				if (nombreDeUsuarioStr.length() < 3 )
 				{
-					msjErrorUsuario = "El usuario debe tener minimo 3 caracters";
+					msjErrorUsuario = "El usuario debe tener minimo 3 caracteres";
 					hayError = true;
 				}
 
@@ -139,98 +267,45 @@ INT_PTR CALLBACK fnDlgInicioSesion
 
 				if (hayError == true)
 				{
-					SetDlgItemTextA(
-						hDialgoActual,
-						LBL_ERRORUSUARIO,
-						msjErrorUsuario.c_str()
-					);
-					SetDlgItemTextA(
-						hDialgoActual,
-						LBL_ERRORCONTRASENA,
-						msjErrorContrasena.c_str()
-					);
+					//Si los datos son invalidos, procedemos a mostrar los mensajes de error
+					SetDlgItemTextA(hDialgoActual,LBL_ERRORUSUARIO,msjErrorUsuario.c_str());
+					SetDlgItemTextA(hDialgoActual,LBL_ERRORCONTRASENA,msjErrorContrasena.c_str());
 					return FALSE;
 				}
 
+				//Si los datos cumplen con las reglas de validacion, o son validos, entonces procedemos a checar si las credenciales
+				//ingresadas coinciden con algun registro de la lista
 				bool usuarioLogeado = false;
 
-				for (int i = 0; i < 3; i++)
+				Usuario* aux = INICIO_LISTA;
+				while (aux != NULL)
 				{
-					if (nombreDeUsuarioStr == usuarios[i].nom && contrasenaStr == usuarios[i].contra)
+					if (nombreDeUsuarioStr == aux->Nombre && contrasenaStr == aux->Contrasena)
 					{
-						usuarioLogeado =  true;
-						/*string mensaje = "El usuario es: " + nombreDeUsuarioStr + " puede iniciar sesion";
-						if (usuarios[i].tipoUs == ADMIN)
-							mensaje += " y es Administrador";
-						else
-							mensaje += " y es cajero";*/
-						/*MessageBoxA(
-							NULL,
-							mensaje.c_str(),
-							"Datos correctos",
-							MB_OK
-						);*/
+						usuarioLogeado = true;
+						UsuarioEnSesion = aux;
 
-						//IDD_DIALOG1
-						HWND hDlg = CreateDialogW(
-							GlobalhIdentificador,
-							MAKEINTRESOURCE(IDD_DIALOG1),
-							NULL,
-							fnDlgInicioSesion
-						);
+						HWND hDlg = CreateDialogW(GlobalhIdentificador,MAKEINTRESOURCE(IDD_PRINCIPAL),NULL, fnDlgPantallaPrincipal);
 
 						ShowWindow(hDlg, SW_SHOW);
 						DestroyWindow(hDialgoActual);
 					}
+					aux = aux->Siguiente;
 				}
-				
 
+				//Si ningun registro hace match entonces mostrar un mensaje de error
 				if (usuarioLogeado == false)
 				{
-					MessageBoxA(
-						NULL,
-						"Las credenciales ingresadas son invalidas",
-						"Datos incorrectos",
-						MB_ICONERROR
-					);
+					MessageBoxA(NULL,"Las credenciales ingresadas son invalidas","Datos incorrectos",MB_ICONERROR);
 				}
-
-
-
-				
 			}
-					break;
+			break;
 			}
 		}
 		break;
 		case WM_CLOSE:
 		{
-			int respuesta = MessageBoxA(
-				NULL,
-				"Deseas iniciar sesion?",
-				"Iniciando sesion...",
-				MB_OKCANCEL | MB_ICONQUESTION
-			);
-
-			if (respuesta == IDOK) //si el usuario le dio click al boton de aceptar en el Messagebox
-			{
-				MessageBoxA(
-					NULL,
-					"Has iniciado sesion",
-					"Sesion iniciada",
-					MB_OK | MB_ICONEXCLAMATION
-				);
-			}
-			else if (respuesta == IDCANCEL)
-			{
-				MessageBoxA(
-					NULL,
-					"Has cancelado el inicio de sesion",
-					"Sesion cancelada",
-					MB_OK | MB_ICONSTOP
-				);
-			}
-
+			MostrarMensajeDeCierre();
 		}
 		break;
 	}
@@ -253,12 +328,18 @@ int WINAPI wWinMain
 {
 	GlobalhIdentificador = hIdentificador;
 
-	User u1 = { "ray", "123", ADMIN};
-	User u2 = { "mar", "456", CAJERO};
-	User u3 = { "lui", "xyz", CAJERO };
-	usuarios[0] = u1;
-	usuarios[1] = u2;
-	usuarios[2] = u3;
+	LeerUsuariosDesdeArchivo();
+
+	if (INICIO_LISTA == NULL)
+	{
+		Usuario* admin = new Usuario;
+		admin->Nombre = "Ray";
+		admin->Contrasena= "1234";
+		admin->TipoUsuario = USUARIO_ADMIN;
+		admin->Siguiente = NULL;
+
+		INICIO_LISTA = admin;
+	}
 
 	HWND hDlg = CreateDialogW(
 		//Identificador de la aplicacion
@@ -287,3 +368,42 @@ int WINAPI wWinMain
 
 	return 0;
 }
+
+
+/*
+* 
+* RUTINA PARA RECORRER LISTA DE USUARIOS
+* 
+Usuario* aux = INICIO_LISTA;
+while (aux != NULL)
+{
+					
+	aux = aux->Siguiente;
+}
+
+int respuesta = MessageBoxA(
+				NULL,
+				"Deseas iniciar sesion?",
+				"Iniciando sesion...",
+				MB_OKCANCEL | MB_ICONQUESTION
+			);
+
+			if (respuesta == IDOK) //si el usuario le dio click al boton de aceptar en el Messagebox
+			{
+				MessageBoxA(
+					NULL,
+					"Has iniciado sesion",
+					"Sesion iniciada",
+					MB_OK | MB_ICONEXCLAMATION
+				);
+			}
+			else if (respuesta == IDCANCEL)
+			{
+				MessageBoxA(
+					NULL,
+					"Has cancelado el inicio de sesion",
+					"Sesion cancelada",
+					MB_OK | MB_ICONSTOP
+				);
+			}
+*/
