@@ -214,7 +214,7 @@ _A continuación se definen las propiedades necesarias para administrar la infor
 | ----------------------- | ------------------------------------------------------------------------------------------------------------- | --------- |
 | Nombre                  | Solo caracteres alfabéticos y espacios, mínimo 5 y máximo 50                                                  | Si        |
 | Punto requerido         | Solo números no negativos                                                                                     | Si        |
-| Porcentaje de descuento | Cantidad decimal, mayor a 0 y menor a 100                                                                     | Si        |
+| Porcentaje de descuento | Cantidad entera, mayor a 0 y menor a 100                                                                     | Si        |
 | Estatus                 | Mostrar un listbox, un par de radio buttons o un checkbox para indicar si esta activa o inactiva la promoción | Si        |
 
 *El nombre de las BrunchyPromos no se puede editar.*
