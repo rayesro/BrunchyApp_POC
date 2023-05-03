@@ -18,13 +18,16 @@
 #define TXT_CONTRAUS                    1008
 #define LBX_USUARIOS                    1009
 #define PIC_IMAGEN                      1010
-#define IDC_BUTTON1                     1011
+#define BTN_CARGARIMAGEN                1011
 #define RDB_ADMIN                       1012
 #define RDB_CAJERO                      1013
 #define PIC_IMAGENUSUARIO               1014
 #define LBL_NOMBREUSUARIO               1015
 #define BTN_GUARDAR                     1016
 #define BTN_NUEVO                       1017
+#define BTN_ELIMINAR                    1018
+#define BTN_ELIMINAR2                   1019
+#define BTN_GUARDARCSV                  1019
 #define ID_USUARIOS_ALTA                40001
 #define ID_USUARIOS_BAJA                40002
 #define ID_USUARIOS_MODIFICAR           40003
