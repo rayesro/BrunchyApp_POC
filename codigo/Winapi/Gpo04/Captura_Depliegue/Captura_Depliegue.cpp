@@ -11,6 +11,7 @@ using namespace std;
 int contador = 0;
 HINSTANCE GlobalhIdentificador;
 wchar_t* rutaDeImageEnDisco = new wchar_t[255];
+HBITMAP IMGDEFAULT;
 
 #define USUARIO_ADMIN  1 
 #define USUARIO_CAJERO 2
@@ -27,36 +28,37 @@ struct Usuario {
 Usuario* INICIO_LISTA = NULL;
 Usuario* UsuarioEnSesion = NULL;
 
+INT_PTR CALLBACK fnDlgInicioSesion (HWND hDialogoActual, UINT uMensaje,			WPARAM wParam,			LPARAM lParam				);
+
 void GuardarUsuariosEnArchivo()
 {
 	fstream archivo;
 	archivo.open("usuarios.bin", ios::binary | ios::out);
 
-	Usuario* aux = INICIO_LISTA;
-	while (aux != NULL)
+	Usuario* usuario = INICIO_LISTA;
+	while (usuario != NULL)
 	{
-		archivo.write((char*)aux, sizeof(Usuario));
+		archivo.write((char*)usuario, sizeof(Usuario));
 
-		aux = aux->Siguiente;
+		usuario = usuario->Siguiente;
 	}
 	archivo.close();
 }
 
 void GuardarUsuariosEnCSV()
 {
-	fstream archivo;
+	fstream archivo; // Comma Separated Values
 	archivo.open("usuarios.csv", ios::out);
 
-	Usuario* aux = INICIO_LISTA;
-	while (aux != NULL)
+	Usuario* us = INICIO_LISTA;
+	while (us != NULL)
 	{
-		//archivo.write((char*)aux, sizeof(Usuario));
-		archivo << aux->Nombre << ","
-			<< aux->Contrasena << ","
-			<< aux->TipoUsuario << ","
-			<< aux->RutaImagen << "\n";
+		archivo << us->Nombre			 << ","
+						<< us->Contrasena	 << ","
+						<< us->TipoUsuario << ","
+						<< us->RutaImagen  << "\n";
 
-		aux = aux->Siguiente;
+		us = us->Siguiente;
 	}
 	archivo.close();
 }
@@ -97,10 +99,13 @@ void LeerUsuariosDesdeArchivo()
 	archivo.close();
 }
 
-
 void MostrarMensajeDeCierre()
 {
-	int respuesta = MessageBoxA(NULL, "Estas seguro que quieres cerrar la aplicacion?", "Terminando aplicacion...", MB_OKCANCEL | MB_ICONQUESTION);
+	int respuesta = MessageBoxA(
+		NULL,
+		"Estas seguro que quieres cerrar la aplicacion?", 
+		"Terminando aplicacion...", 
+		MB_OKCANCEL | MB_ICONQUESTION);
 	if (respuesta == IDOK) //si el usuario le dio click al boton de aceptar en el Messagebox
 	{
 		GuardarUsuariosEnArchivo();
@@ -111,7 +116,8 @@ void MostrarMensajeDeCierre()
 Usuario* ObtenerUsuarioSeleccionado(HWND hDialogoActual)
 {
 	int indice = SendDlgItemMessage(hDialogoActual, LBX_USUARIOS, LB_GETCURSEL, NULL, NULL);
-	Usuario* usuarioSeleccionado = (Usuario*)SendDlgItemMessage(hDialogoActual, LBX_USUARIOS, LB_GETITEMDATA, indice, NULL);
+	Usuario* usuarioSeleccionado = 
+		(Usuario*)SendDlgItemMessage(hDialogoActual, LBX_USUARIOS, LB_GETITEMDATA, indice, NULL);
 	return usuarioSeleccionado;
 }
 
@@ -123,21 +129,29 @@ INT_PTR CALLBACK fnDlgPantallaPrincipal(HWND hDialogoActual, UINT uMensaje, WPAR
 	{
 		SetDlgItemTextA(hDialogoActual, LBL_NOMBREUSUARIO, UsuarioEnSesion->Nombre.c_str());
 
-		HBITMAP bitmap = (HBITMAP)LoadImageA(GlobalhIdentificador, UsuarioEnSesion->RutaImagen, IMAGE_BITMAP, 32, 32, LR_LOADFROMFILE);
+		HWND hPicImagen = GetDlgItem(hDialogoActual, PIC_IMAGEN);
+		SendMessage(hPicImagen, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)IMGDEFAULT);
+
+		//Establecemos la imagen del usuario en sesion en el picture control
+
+		//Checar si la ruta de la imagen del usuario en sesion esta vacia
+		//Si esta vacia cargo la IMGDEFAULT
+		//Si no, cargo la imagen usando la ruta de la imagen
+
+		HBITMAP img = (HBITMAP)LoadImageA(GlobalhIdentificador, UsuarioEnSesion->RutaImagen, IMAGE_BITMAP, 32, 32, LR_LOADFROMFILE);
 		HWND hPictureControl = GetDlgItem(hDialogoActual, PIC_IMAGENUSUARIO);
-		SendMessage(hPictureControl, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bitmap);
+		SendMessage(hPictureControl, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)img);
 
 
+		//Los siguientes pasos son para inicializar el listbox
 		//1-Obtener la referencia al componente del Listbox, en este caso, al ID LBX_USUARIOS
 		HWND hListbox = GetDlgItem(hDialogoActual, LBX_USUARIOS);
-
 		Usuario* aux = INICIO_LISTA;
 		while (aux != NULL)
 		{
 			//2-Mandar un mensaje para agregar una cadena de texto al listbox usando su HWND y 
 			//3-Guardar el indice que regresa la funcion SendMessageA
 			int indice = SendMessageA(hListbox, LB_ADDSTRING, 0, (LPARAM)aux->Nombre.c_str());
-
 			//4-Usar el indice para establecer datos dentro del listbox
 			SendMessage
 			(
@@ -147,19 +161,17 @@ INT_PTR CALLBACK fnDlgPantallaPrincipal(HWND hDialogoActual, UINT uMensaje, WPAR
 				(LPARAM)aux			//los datos a guardar
 			);
 			aux = aux->Siguiente;
-
-			if (UsuarioEnSesion->TipoUsuario == USUARIO_ADMIN)
-			{
-				HMENU menu = LoadMenu(GlobalhIdentificador, MAKEINTRESOURCE(IDR_MENU1));
-				SetMenu(hDialogoActual, menu);
-			}
-			else
-			{
-				HMENU menu = LoadMenu(GlobalhIdentificador, MAKEINTRESOURCE(IDR_MENU2));
-				SetMenu(hDialogoActual, menu);
-			}
 		}
-
+		if (UsuarioEnSesion->TipoUsuario == USUARIO_ADMIN)
+		{
+			HMENU menu = LoadMenu(GlobalhIdentificador, MAKEINTRESOURCE(IDR_MENU1));
+			SetMenu(hDialogoActual, menu);
+		}
+		else
+		{
+			HMENU menu = LoadMenu(GlobalhIdentificador, MAKEINTRESOURCE(IDR_MENU2));
+			SetMenu(hDialogoActual, menu);
+		}
 	}
 	break;
 	case WM_CLOSE:
@@ -171,6 +183,21 @@ INT_PTR CALLBACK fnDlgPantallaPrincipal(HWND hDialogoActual, UINT uMensaje, WPAR
 	{
 		switch (LOWORD(wParam))
 		{
+		case ID_CERRARSESIONUsuario:
+		{
+			int respuesta = MessageBoxA(
+				NULL,
+				"Estas seguro que quieres cerrar sesion?",
+				"Cerrando sesion...",
+				MB_OKCANCEL | MB_ICONQUESTION);
+			if (respuesta == IDOK) //si el usuario le dio click al boton de aceptar en el Messagebox
+			{
+				HWND hDlg = CreateDialogW(GlobalhIdentificador, MAKEINTRESOURCE(DLG_INICIOSESION), NULL, fnDlgInicioSesion);
+				ShowWindow(hDlg, SW_SHOW);
+				DestroyWindow(hDialogoActual);
+
+			}
+		}
 		case BTN_GUARDARCSV:
 		{
 			GuardarUsuariosEnCSV();
@@ -191,10 +218,12 @@ INT_PTR CALLBACK fnDlgPantallaPrincipal(HWND hDialogoActual, UINT uMensaje, WPAR
 
 			if (respuesta == IDOK) //si el usuario le dio click al boton de aceptar en el Messagebox
 			{
+				Usuario* usuarioQueSeVaAEliminar = NULL;
 				//Para eliminar un nodo de la lista hay 3 escenarios:
 				//Cuando el nodo esta al principio, en medio o al final de la lista
 				if (usuarioAEliminar == INICIO_LISTA)
 				{
+					usuarioQueSeVaAEliminar = INICIO_LISTA;
 					INICIO_LISTA = INICIO_LISTA->Siguiente;
 				}
 				else if (usuarioAEliminar->Siguiente == NULL)
@@ -204,6 +233,7 @@ INT_PTR CALLBACK fnDlgPantallaPrincipal(HWND hDialogoActual, UINT uMensaje, WPAR
 					{
 						aux = aux->Siguiente;
 					}
+					usuarioQueSeVaAEliminar = aux->Siguiente;
 					aux->Siguiente = NULL;
 				}
 				else
@@ -213,10 +243,11 @@ INT_PTR CALLBACK fnDlgPantallaPrincipal(HWND hDialogoActual, UINT uMensaje, WPAR
 					{
 						aux = aux->Siguiente;
 					}
+					usuarioQueSeVaAEliminar = aux->Siguiente;
 					aux->Siguiente = usuarioAEliminar->Siguiente;
 				}
 
-				delete usuarioAEliminar;
+				usuarioQueSeVaAEliminar = NULL;
 
 				SendDlgItemMessage(hDialogoActual, LBX_USUARIOS, LB_DELETESTRING, indice, 0);
 			}
@@ -233,11 +264,28 @@ INT_PTR CALLBACK fnDlgPantallaPrincipal(HWND hDialogoActual, UINT uMensaje, WPAR
 			string contrasenaStr(contrasena);
 
 			int indice = SendDlgItemMessage(hDialogoActual, LBX_USUARIOS, LB_GETCURSEL, NULL, NULL);
+			if (indice == -1)
+			{
+				MessageBoxA(
+					NULL,
+					"Selecciona un usuario antes, por favor",
+					"Atencion...",
+					MB_OK | MB_ICONEXCLAMATION);
+				break;
+			}
+
+
+
 			Usuario* usuarioAEditar = (Usuario*)SendDlgItemMessage(hDialogoActual, LBX_USUARIOS, LB_GETITEMDATA, indice, NULL);
 
 			usuarioAEditar->Nombre = nombreDeUsuarioStr;
 			usuarioAEditar->Contrasena = contrasenaStr;
 
+			SendDlgItemMessage(hDialogoActual, LBX_USUARIOS, LB_DELETESTRING, indice, 0);
+			
+			HWND hListbox = GetDlgItem(hDialogoActual, LBX_USUARIOS);
+			indice = SendMessageA(hListbox, LB_ADDSTRING, 0, (LPARAM)usuarioAEditar->Nombre.c_str());
+			SendMessage(hListbox, LB_SETITEMDATA, indice, (LPARAM)usuarioAEditar);
 
 		}
 		break;
@@ -262,7 +310,6 @@ INT_PTR CALLBACK fnDlgPantallaPrincipal(HWND hDialogoActual, UINT uMensaje, WPAR
 				HWND hPictureControl = GetDlgItem(hDialogoActual, PIC_IMAGEN);
 				//Enviar la imagen al control
 				SendMessage(hPictureControl, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bitmap);
-
 			}
 
 		}
@@ -283,13 +330,19 @@ INT_PTR CALLBACK fnDlgPantallaPrincipal(HWND hDialogoActual, UINT uMensaje, WPAR
 			nuevoUsuario->Nombre = nombreDeUsuarioStr;
 			nuevoUsuario->Contrasena = contrasenaStr;
 			nuevoUsuario->TipoUsuario = USUARIO_CAJERO;
+			nuevoUsuario->Siguiente = NULL;
 
 			//empieza conversion de wchar_t a char
+
+			//Si la rutaDeImageEnDisco esta vacia entonces 
+			//guardamos la ruta de la imagen default en la RutaImagen
+			//Si rutaDeImageEnDisco si tiene informacion entonces
+			//hacemos todo la conversion de wchar_t a char[]
 			wstring ws = wstring(rutaDeImageEnDisco);
 			string imagen(ws.begin(), ws.end());
 			strcpy(nuevoUsuario->RutaImagen, imagen.c_str());
 			//termina conversion de wchar_t a char
-			nuevoUsuario->Siguiente = NULL;
+			
 
 			//metemos al usuario nuevo en la lista
 			if (INICIO_LISTA == NULL)
@@ -322,10 +375,14 @@ INT_PTR CALLBACK fnDlgPantallaPrincipal(HWND hDialogoActual, UINT uMensaje, WPAR
 				//6-Obtener el indice del registro del listbox al que le dimos click
 				int indice = SendDlgItemMessage(hDialogoActual, LBX_USUARIOS, LB_GETCURSEL, NULL, NULL);
 				//7-Obtenemos los datos guardados en el registro indicado por el indice y convertimos esos datos a nuestra estructura
-				Usuario* us = (Usuario*)SendDlgItemMessage(hDialogoActual, LBX_USUARIOS, LB_GETITEMDATA, indice, NULL);
+				Usuario* usuarioSeleccionado = (Usuario*)SendDlgItemMessage(hDialogoActual, LBX_USUARIOS, LB_GETITEMDATA, indice, NULL);
 
-				SetDlgItemTextA(hDialogoActual, TXT_NOMUS, us->Nombre.c_str());
-				SetDlgItemTextA(hDialogoActual, TXT_CONTRAUS, us->Contrasena.c_str());
+				SetDlgItemTextA(hDialogoActual, TXT_NOMUS, usuarioSeleccionado->Nombre.c_str());
+				SetDlgItemTextA(hDialogoActual, TXT_CONTRAUS, usuarioSeleccionado->Contrasena.c_str());
+
+				HBITMAP img = (HBITMAP)LoadImageA(GlobalhIdentificador, usuarioSeleccionado->RutaImagen, IMAGE_BITMAP, 64, 64, LR_LOADFROMFILE);
+				HWND hPictureControl = GetDlgItem(hDialogoActual, PIC_IMAGEN);
+				SendMessage(hPictureControl, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)img);
 			}
 			break;
 			}
@@ -357,6 +414,8 @@ INT_PTR CALLBACK fnDlgInicioSesion
 	{
 		switch (LOWORD(wParam))
 		{
+	
+		break;
 		case BTN_SALIR:
 		{
 			MostrarMensajeDeCierre();
@@ -373,7 +432,6 @@ INT_PTR CALLBACK fnDlgInicioSesion
 			//Convertimos los arreglos de chars a datos tipo string
 			string nombreDeUsuarioStr(nombreDeUsuario);
 			string contrasenaStr(contrasena);
-
 
 			//Aqui empezamos la validacion de las credenciales ingresadas
 			bool hayError = false;
@@ -464,6 +522,8 @@ int WINAPI wWinMain
 	GlobalhIdentificador = hIdentificador;
 
 	LeerUsuariosDesdeArchivo();
+
+	IMGDEFAULT = (HBITMAP)LoadImageA(GlobalhIdentificador, "profile_default_2.bmp", IMAGE_BITMAP, 128, 128, LR_LOADFROMFILE);
 
 	if (INICIO_LISTA == NULL)
 	{

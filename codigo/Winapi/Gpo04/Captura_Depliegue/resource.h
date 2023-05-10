@@ -26,7 +26,6 @@
 #define BTN_GUARDAR                     1016
 #define BTN_NUEVO                       1017
 #define BTN_ELIMINAR                    1018
-#define BTN_ELIMINAR2                   1019
 #define BTN_GUARDARCSV                  1019
 #define ID_USUARIOS_ALTA                40001
 #define ID_USUARIOS_BAJA                40002
@@ -37,13 +36,18 @@
 #define ID_SUCURSALES_LISTADO           40007
 #define ID_USUARIO_LISTADO              40008
 #define ID_SUCURSALES_LISTADO40009      40009
+#define ID_CERRARSESION                 40010
+#define Mas                             40011
+#define ID_PERFIL_CERRARSESION          40012
+#define ID_CERRARSESION40013            40013
+#define ID_CERRARSESIONUsuario          40014
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        107
-#define _APS_NEXT_COMMAND_VALUE         40010
+#define _APS_NEXT_COMMAND_VALUE         40015
 #define _APS_NEXT_CONTROL_VALUE         1018
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
